@@ -54,9 +54,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="CodeExec\Abstract\Action\" />
-    <Folder Include="CodeExec\Static\Action\" />
-  </ItemGroup>
-
 </Project>

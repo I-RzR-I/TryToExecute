@@ -1,7 +1,8 @@
 ﻿#region U S A G E S
 
 using Microsoft.Extensions.Logging;
-using TryToExecute.CodeExec.Static.Func;
+using TryToExecute.CodeExec;
+
 
 // ReSharper disable NotAccessedField.Local
 
@@ -100,5 +101,96 @@ public class TryCatchExecuteStaticTests : TryCatchExecuteStaticBase
 
         Assert.IsNotNull(exec);
         Assert.AreEqual(1, exec);
+    }
+
+    [TestMethod]
+    public void TryToExec_ExecTResult_FailureTResult_ShouldPass_Test()
+    {
+        var exec = TryToExecute(1, -1);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(1, exec);
+    }
+
+    [TestMethod]
+    public void TryToExecAction_funcFinally_ShouldPass_Test()
+    {
+        var changedValue = 0;
+        var exec = TryToExecute(1, -1, () => { changedValue = 10; return 1; });
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(1, exec);
+        Assert.AreEqual(10, changedValue);
+    }
+
+    [TestMethod]
+    public void TryToExecAction_ActionFinally_ShouldPass_Test()
+    {
+        var changedValue = 0;
+        var exec = TryToExecute(1, -1, () => { changedValue = 10; });
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(1, exec);
+        Assert.AreEqual(10, changedValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncT_ResultTFailure_FuncFinally_FGC_ShouldFail_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var exec = TryToExecute(
+            () => { throw new Exception(""); changedValue++; return 0; },
+            -1, () => { changedFinallyValue++; return 999; }, false);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(-1, exec);
+        Assert.AreEqual(0, changedValue);
+        Assert.AreEqual(11, changedFinallyValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncT_ResultTFailure_FuncFinally_TGC_ShouldFail_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var exec = TryToExecute(
+            () => { throw new Exception(""); changedValue++; return 0; },
+            -1, () => { changedFinallyValue++; return 999; }, true);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(-1, exec);
+        Assert.AreEqual(0, changedValue);
+        Assert.AreEqual(11, changedFinallyValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncT_ResultTFailure_FuncFinally_FGC_ShouldPass_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var exec = TryToExecute(
+            () => { changedValue++; return 0; },
+            -1, () => { changedFinallyValue++; return 999; }, false);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(0, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(11, changedFinallyValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncT_ResultTFailure_FuncFinally_TGC_ShouldPass_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var exec = TryToExecute(
+            () => { changedValue++; return 0; },
+            -1, () => { changedFinallyValue++; return 999; }, true);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(0, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(11, changedFinallyValue);
     }
 }
