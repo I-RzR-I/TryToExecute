@@ -1,0 +1,62 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard1.0;netstandard1.3;netstandard2.0</TargetFrameworks>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <Authors>RzR</Authors>
+    <Copyright>RzR</Copyright>
+    <Owners>RzR</Owners>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <PackageIcon>PackageIcon.png</PackageIcon>
+    <NoWarn>$(NoWarn);CS8032</NoWarn>
+    <EnableNETAnalyzers>false</EnableNETAnalyzers>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <PackageTags>Try;Catch;Finally;Execute;Code;Exception;Delegate;Func;Action</PackageTags>
+    <RepositoryUrl>https://github.com/I-RzR-I/TryToExecute</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/I-RzR-I/TryToExecute</PackageProjectUrl>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageDescription>The 'TryToExecute' represents an implementation of the try/catch/finally block. It can execute code without worrying about exceptions; it only specifies what to do in this case and delegate it.</PackageDescription>
+    <Summary>The 'TryToExecute' represents an implementation of the try/catch/finally block. It can execute code without worrying about exceptions; it only specifies what to do in this case and delegate it.</Summary>
+    <PackageTitle>RzR.Shared.Extensions (TryToExecute)</PackageTitle>
+    <Title>RzR.Shared.Extensions (TryToExecute)</Title>
+    <LangVersion>9.0</LangVersion>
+    <Language>en-US</Language>
+    <RepositoryType>GIT</RepositoryType>
+    <PackageIconUrl />
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\shared\GeneralAssemblyInfo.cs" Link="Properties\GeneralAssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="..\..\assets\PackageIcon.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="Microsoft.Extensions.Logging">
+      <Version>2.1.1</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="CodeExec\Abstract\Action\" />
+    <Folder Include="CodeExec\Static\Action\" />
+  </ItemGroup>
+
+</Project>
