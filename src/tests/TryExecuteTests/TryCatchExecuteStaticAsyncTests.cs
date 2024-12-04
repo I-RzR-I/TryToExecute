@@ -3,7 +3,7 @@
 using AggregatedGenericResultMessage;
 using AggregatedGenericResultMessage.Abstractions;
 using Microsoft.Extensions.Logging;
-using TryToExecute.CodeExec.Static.Func;
+using TryToExecute.CodeExec;
 
 #endregion
 

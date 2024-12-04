@@ -25,15 +25,13 @@ using TryToExecute.Helpers;
 using Microsoft.Extensions.Logging;
 #endif
 
+// ReSharper disable CheckNamespace
+
 #endregion
 
-namespace TryToExecute.CodeExec.Static.Func
+namespace TryToExecute.CodeExec
 {
-    /// -------------------------------------------------------------------------------------------------
-    /// <content>
-    ///     A try catch execute static base.
-    /// </content>
-    /// =================================================================================================
+    /// <inheritdoc cref="CodeExec.TryCatchExecuteStaticBase"/>
     public partial class TryCatchExecuteStaticBase
     {
         /// -------------------------------------------------------------------------------------------------

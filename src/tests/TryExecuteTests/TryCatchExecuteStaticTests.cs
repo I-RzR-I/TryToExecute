@@ -1,7 +1,8 @@
 ﻿#region U S A G E S
 
 using Microsoft.Extensions.Logging;
-using TryToExecute.CodeExec.Static.Func;
+using TryToExecute.CodeExec;
+
 
 // ReSharper disable NotAccessedField.Local
 
