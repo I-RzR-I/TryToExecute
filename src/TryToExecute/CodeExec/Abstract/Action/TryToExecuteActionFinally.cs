@@ -33,21 +33,22 @@ namespace TryToExecute.CodeExec
 {
     /// <inheritdoc cref="CodeExec.TryCatchExecuteBase"/>
     public abstract partial class TryCatchExecuteBase
-    {        /// -------------------------------------------------------------------------------------------------
-             /// <summary>
-             ///     Try to execute.
-             /// </summary>
-             /// <typeparam name="TResult">Type of the result.</typeparam>
-             /// <param name="execRequest">The execute request.</param>
-             /// <param name="onFailureResult">The on failure result.</param>
-             /// <param name="finallyExecAction">The finally execute action.</param>
-             /// <param name="forceCallGarbageCollector">
-             ///     (Optional) True to force call garbage collector.
-             /// </param>
-             /// <returns>
-             ///     A TResult.
-             /// </returns>
-             /// =================================================================================================
+    {
+        /// -------------------------------------------------------------------------------------------------
+        /// <summary>
+        ///     Try to execute.
+        /// </summary>
+        /// <typeparam name="TResult">Type of the result.</typeparam>
+        /// <param name="execRequest">The execute request.</param>
+        /// <param name="onFailureResult">The on failure result.</param>
+        /// <param name="finallyExecAction">The finally execute action.</param>
+        /// <param name="forceCallGarbageCollector">
+        ///     (Optional) True to force call garbage collector.
+        /// </param>
+        /// <returns>
+        ///     A TResult.
+        /// </returns>
+        /// =================================================================================================
         protected virtual TResult TryToExecute<TResult>(
             TResult execRequest,
             TResult onFailureResult,
