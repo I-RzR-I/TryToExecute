@@ -412,7 +412,6 @@ namespace TryToExecute.CodeExec
         }
 
 #if NETSTANDARD2_0_OR_GREATER
-
         /// -------------------------------------------------------------------------------------------------
         /// <summary>
         ///     Try to execute.

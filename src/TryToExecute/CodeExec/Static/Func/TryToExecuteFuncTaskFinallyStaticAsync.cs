@@ -1,12 +1,12 @@
 ﻿// ***********************************************************************
 //  Assembly         : RzR.Shared.Extensions.TryToExecute
 //  Author           : RzR
-//  Created On       : 2024-12-04 19:08
+//  Created On       : 2024-12-05 18:34
 // 
 //  Last Modified By : RzR
-//  Last Modified On : 2024-12-04 19:08
+//  Last Modified On : 2024-12-05 18:34
 // ***********************************************************************
-//  <copyright file="TryToExecuteActionFinallyAsync.cs" company="RzR SOFT & TECH">
+//  <copyright file="TryToExecuteFuncTaskFinallyStaticAsync.cs" company="RzR SOFT & TECH">
 //   Copyright © RzR. All rights reserved.
 //  </copyright>
 // 
@@ -18,10 +18,9 @@
 
 using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using TryToExecute.Extensions;
 using TryToExecute.Helpers;
-using System.Threading.Tasks;
-
 
 #if NETSTANDARD2_0_OR_GREATER
 using Microsoft.Extensions.Logging;
@@ -33,8 +32,8 @@ using Microsoft.Extensions.Logging;
 
 namespace TryToExecute.CodeExec
 {
-    /// <inheritdoc cref="CodeExec.TryCatchExecuteBase"/>
-    public abstract partial class TryCatchExecuteBase
+    /// <inheritdoc cref="CodeExec.TryCatchExecuteStaticBase"/>
+    public partial class TryCatchExecuteStaticBase
     {
         /// -------------------------------------------------------------------------------------------------
         /// <summary>
@@ -43,7 +42,7 @@ namespace TryToExecute.CodeExec
         /// <typeparam name="TResult">Type of the result.</typeparam>
         /// <param name="execFunc">The execute function.</param>
         /// <param name="onFailureResult">The on failure result.</param>
-        /// <param name="finallyExecAction">The finally execute action.</param>
+        /// <param name="finallyExecFunc">The finally execute function.</param>
         /// <param name="forceCallGarbageCollector">
         ///     (Optional) True to force call garbage collector.
         /// </param>
@@ -51,13 +50,14 @@ namespace TryToExecute.CodeExec
         ///     A TResult.
         /// </returns>
         /// =================================================================================================
-        protected virtual async Task<TResult> TryToExecuteAsync<TResult>(
+        protected static async Task<TResult> TryToExecuteAsync<TResult>(
             Func<Task<TResult>> execFunc,
             TResult onFailureResult,
-            Action finallyExecAction,
+            Func<Task> finallyExecFunc,
             bool forceCallGarbageCollector = false)
         {
             execFunc.ThrowIfArgNull(nameof(execFunc));
+            finallyExecFunc.ThrowIfArgNull(nameof(finallyExecFunc));
 
             try
             {
@@ -76,8 +76,7 @@ namespace TryToExecute.CodeExec
             }
             finally
             {
-                if (finallyExecAction.IsNotNull())
-                    finallyExecAction?.Invoke();
+                await finallyExecFunc.Invoke();
 
                 if (forceCallGarbageCollector.IsTrue())
                     TryToExecuteAppHelper.ForceCallGC();
@@ -94,7 +93,7 @@ namespace TryToExecute.CodeExec
         /// <param name="execFunc">The execute function.</param>
         /// <param name="onFailureResult">The on failure result.</param>
         /// <param name="exceptionLogger">The exception logger.</param>
-        /// <param name="finallyExecAction">The finally execute action.</param>
+        /// <param name="finallyExecFunc">The finally execute function.</param>
         /// <param name="forceCallGarbageCollector">
         ///     (Optional) True to force call garbage collector.
         /// </param>
@@ -102,14 +101,15 @@ namespace TryToExecute.CodeExec
         ///     A TResult.
         /// </returns>
         /// =================================================================================================
-        protected virtual async Task<TResult> TryToExecuteAsync<TResult, TLogger>(
+        protected static async Task<TResult> TryToExecuteAsync<TResult, TLogger>(
             Func<Task<TResult>> execFunc,
             TResult onFailureResult,
             ILogger<TLogger> exceptionLogger,
-            Action finallyExecAction,
+            Func<Task> finallyExecFunc,
             bool forceCallGarbageCollector = false)
         {
             execFunc.ThrowIfArgNull(nameof(execFunc));
+            finallyExecFunc.ThrowIfArgNull(nameof(finallyExecFunc));
             exceptionLogger.ThrowIfArgNull(nameof(exceptionLogger));
 
             try
@@ -130,8 +130,7 @@ namespace TryToExecute.CodeExec
             }
             finally
             {
-                if (finallyExecAction.IsNotNull())
-                    finallyExecAction?.Invoke();
+                await finallyExecFunc.Invoke();
 
                 if (forceCallGarbageCollector.IsTrue())
                     TryToExecuteAppHelper.ForceCallGC();
@@ -146,7 +145,7 @@ namespace TryToExecute.CodeExec
         /// <typeparam name="TResult">Type of the result.</typeparam>
         /// <param name="execFunc">The execute function.</param>
         /// <param name="onFailureResult">The on failure result.</param>
-        /// <param name="finallyExecAction">The finally execute action.</param>
+        /// <param name="finallyExecFunc">The finally execute function.</param>
         /// <param name="forceCallGarbageCollector">
         ///     (Optional) True to force call garbage collector.
         /// </param>
@@ -154,14 +153,15 @@ namespace TryToExecute.CodeExec
         ///     A TResult.
         /// </returns>
         /// =================================================================================================
-        protected virtual async Task<TResult> TryToExecuteAsync<TResult>(
+        protected static async Task<TResult> TryToExecuteAsync<TResult>(
             Func<Task<TResult>> execFunc,
             Func<TResult> onFailureResult,
-            Action finallyExecAction,
+            Func<Task> finallyExecFunc,
             bool forceCallGarbageCollector = false)
         {
             execFunc.ThrowIfArgNull(nameof(execFunc));
             onFailureResult.ThrowIfArgNull(nameof(onFailureResult));
+            finallyExecFunc.ThrowIfArgNull(nameof(finallyExecFunc));
 
             try
             {
@@ -180,8 +180,7 @@ namespace TryToExecute.CodeExec
             }
             finally
             {
-                if (finallyExecAction.IsNotNull())
-                    finallyExecAction?.Invoke();
+                await finallyExecFunc.Invoke();
 
                 if (forceCallGarbageCollector.IsTrue())
                     TryToExecuteAppHelper.ForceCallGC();
@@ -198,7 +197,7 @@ namespace TryToExecute.CodeExec
         /// <param name="execFunc">The execute function.</param>
         /// <param name="onFailureResult">The on failure result.</param>
         /// <param name="exceptionLogger">The exception logger.</param>
-        /// <param name="finallyExecAction">The finally execute action.</param>
+        /// <param name="finallyExecFunc">The finally execute function.</param>
         /// <param name="forceCallGarbageCollector">
         ///     (Optional) True to force call garbage collector.
         /// </param>
@@ -206,15 +205,16 @@ namespace TryToExecute.CodeExec
         ///     A TResult.
         /// </returns>
         /// =================================================================================================
-        protected virtual async Task<TResult> TryToExecuteAsync<TResult, TLogger>(
+        protected static async Task<TResult> TryToExecuteAsync<TResult, TLogger>(
             Func<Task<TResult>> execFunc,
             Func<TResult> onFailureResult,
             ILogger<TLogger> exceptionLogger,
-            Action finallyExecAction,
+            Func<Task> finallyExecFunc,
             bool forceCallGarbageCollector = false)
         {
             execFunc.ThrowIfArgNull(nameof(execFunc));
             onFailureResult.ThrowIfArgNull(nameof(onFailureResult));
+            finallyExecFunc.ThrowIfArgNull(nameof(finallyExecFunc));
             exceptionLogger.ThrowIfArgNull(nameof(exceptionLogger));
 
             try
@@ -235,8 +235,7 @@ namespace TryToExecute.CodeExec
             }
             finally
             {
-                if (finallyExecAction.IsNotNull())
-                    finallyExecAction?.Invoke();
+                await finallyExecFunc.Invoke();
 
                 if (forceCallGarbageCollector.IsTrue())
                     TryToExecuteAppHelper.ForceCallGC();
@@ -251,7 +250,7 @@ namespace TryToExecute.CodeExec
         /// <typeparam name="TResult">Type of the result.</typeparam>
         /// <param name="execFunc">The execute function.</param>
         /// <param name="onFailureResult">The on failure result.</param>
-        /// <param name="finallyExecAction">The finally execute action.</param>
+        /// <param name="finallyExecFunc">The finally execute function.</param>
         /// <param name="forceCallGarbageCollector">
         ///     (Optional) True to force call garbage collector.
         /// </param>
@@ -259,14 +258,15 @@ namespace TryToExecute.CodeExec
         ///     A TResult.
         /// </returns>
         /// =================================================================================================
-        protected virtual async Task<TResult> TryToExecuteAsync<TResult>(
+        protected static async Task<TResult> TryToExecuteAsync<TResult>(
             Func<Task<TResult>> execFunc,
             Func<Task<TResult>> onFailureResult,
-            Action finallyExecAction,
+            Func<Task> finallyExecFunc,
             bool forceCallGarbageCollector = false)
         {
             execFunc.ThrowIfArgNull(nameof(execFunc));
             onFailureResult.ThrowIfArgNull(nameof(onFailureResult));
+            finallyExecFunc.ThrowIfArgNull(nameof(finallyExecFunc));
 
             try
             {
@@ -285,8 +285,7 @@ namespace TryToExecute.CodeExec
             }
             finally
             {
-                if (finallyExecAction.IsNotNull())
-                    finallyExecAction?.Invoke();
+                await finallyExecFunc.Invoke();
 
                 if (forceCallGarbageCollector.IsTrue())
                     TryToExecuteAppHelper.ForceCallGC();
@@ -303,7 +302,7 @@ namespace TryToExecute.CodeExec
         /// <param name="execFunc">The execute function.</param>
         /// <param name="onFailureResult">The on failure result.</param>
         /// <param name="exceptionLogger">The exception logger.</param>
-        /// <param name="finallyExecAction">The finally execute action.</param>
+        /// <param name="finallyExecFunc">The finally execute function.</param>
         /// <param name="forceCallGarbageCollector">
         ///     (Optional) True to force call garbage collector.
         /// </param>
@@ -311,16 +310,17 @@ namespace TryToExecute.CodeExec
         ///     A TResult.
         /// </returns>
         /// =================================================================================================
-        protected virtual async Task<TResult> TryToExecuteAsync<TResult, TLogger>(
+        protected static async Task<TResult> TryToExecuteAsync<TResult, TLogger>(
             Func<Task<TResult>> execFunc,
             Func<Task<TResult>> onFailureResult,
             ILogger<TLogger> exceptionLogger,
-            Action finallyExecAction,
+            Func<Task> finallyExecFunc,
             bool forceCallGarbageCollector = false)
         {
             execFunc.ThrowIfArgNull(nameof(execFunc));
             onFailureResult.ThrowIfArgNull(nameof(onFailureResult));
             exceptionLogger.ThrowIfArgNull(nameof(exceptionLogger));
+            finallyExecFunc.ThrowIfArgNull(nameof(finallyExecFunc));
 
             try
             {
@@ -340,8 +340,7 @@ namespace TryToExecute.CodeExec
             }
             finally
             {
-                if (finallyExecAction.IsNotNull())
-                    finallyExecAction?.Invoke();
+                await finallyExecFunc.Invoke();
 
                 if (forceCallGarbageCollector.IsTrue())
                     TryToExecuteAppHelper.ForceCallGC();
