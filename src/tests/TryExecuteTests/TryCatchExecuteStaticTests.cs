@@ -3,7 +3,6 @@
 using Microsoft.Extensions.Logging;
 using TryToExecute.CodeExec;
 
-
 // ReSharper disable NotAccessedField.Local
 
 #endregion
