@@ -3,7 +3,11 @@
 using Microsoft.Extensions.Logging;
 using TryToExecute.CodeExec;
 
+// ReSharper disable RedundantArgumentDefaultValue
+// ReSharper disable RedundantLambdaParameterType
 // ReSharper disable NotAccessedField.Local
+#pragma warning disable CS8618
+#pragma warning disable CS0162
 
 #endregion
 
@@ -191,5 +195,445 @@ public class TryCatchExecuteStaticTests : TryCatchExecuteStaticBase
         Assert.AreEqual(0, exec);
         Assert.AreEqual(1, changedValue);
         Assert.AreEqual(11, changedFinallyValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_TResult_ILogger_GCF_ShouldPass_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; return 0; },
+            onFailureResult: -1,
+            exceptionLogger: _logger,
+            forceCallGarbageCollector: false);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(0, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(10, changedFinallyValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_TResult_ILogger_GCT_ShouldPass_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; return 0; },
+            onFailureResult: -1,
+            exceptionLogger: _logger,
+            forceCallGarbageCollector: true);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(0, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(10, changedFinallyValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_TResult_ILogger_GCF_ShouldPass_Exception_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; throw new Exception("Ex1"); return 0; },
+            onFailureResult: -100,
+            exceptionLogger: _logger,
+            forceCallGarbageCollector: false);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(-100, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(10, changedFinallyValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_TResult_ILogger_GCT_ShouldPass_Exception_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; throw new Exception("Ex1"); return 0; },
+            onFailureResult: -100,
+            exceptionLogger: _logger,
+            forceCallGarbageCollector: true);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(-100, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(10, changedFinallyValue);
+    }
+    
+    [TestMethod]
+    public void TryToExec_FuncTResult_TResult_ILogger_FuncTResult_GCF_ShouldPass_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; return 0; },
+            onFailureResult: -1,
+            exceptionLogger: _logger,
+            finallyExecFunc: () => { changedFinallyValue++; _logger.LogInformation("Finally exec"); return 999; },
+            forceCallGarbageCollector: false);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(0, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(11, changedFinallyValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_TResult_ILogger_FuncTResult_GCT_ShouldPass_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; return 0; },
+            onFailureResult: -1,
+            exceptionLogger: _logger,
+            finallyExecFunc: () => { changedFinallyValue++; _logger.LogInformation("Finally exec"); return 999; },
+            forceCallGarbageCollector: true);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(0, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(11, changedFinallyValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_TResult_ILogger_FuncTResult_GCF_ShouldPass_Exception_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; throw new Exception("Ex1"); return 0; },
+            onFailureResult: -100,
+            exceptionLogger: _logger,
+            finallyExecFunc: () => { changedFinallyValue++; _logger.LogInformation("Finally exec"); return 999; },
+            forceCallGarbageCollector: false);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(-100, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(11, changedFinallyValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_TResult_ILogger_FuncTResult_GCT_ShouldPass_Exception_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; throw new Exception("Ex1"); return 0; },
+            onFailureResult: -100,
+            exceptionLogger: _logger,
+            finallyExecFunc: () => { changedFinallyValue++; _logger.LogInformation("Finally exec"); return 999; },
+            forceCallGarbageCollector: true);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(-100, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(11, changedFinallyValue);
+    }
+    
+    [TestMethod]
+    public void TryToExec_FuncTResult_FuncExceptionTResult_GCF_ShouldPass_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var changedExceptionValue = 101;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; return 0; },
+            onFailureResult: (Exception ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
+            forceCallGarbageCollector: false);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(0, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(10, changedFinallyValue);
+        Assert.AreEqual(101, changedExceptionValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_FuncExceptionTResult_GCT_ShouldPass_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var changedExceptionValue = 101;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; return 0; },
+            onFailureResult: (Exception ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
+            forceCallGarbageCollector: true);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(0, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(10, changedFinallyValue);
+        Assert.AreEqual(101, changedExceptionValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_FuncExceptionTResult_GCF_ShouldPass_Exception_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var changedExceptionValue = 101;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; throw new Exception("Ex1"); return 0; },
+            onFailureResult: (Exception ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
+            forceCallGarbageCollector: false);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(-999, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(10, changedFinallyValue);
+        Assert.AreEqual(-999, changedExceptionValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_FuncExceptionTResult_GCT_ShouldPass_Exception_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var changedExceptionValue = 101;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; throw new Exception("Ex1"); return 0; },
+            onFailureResult: (Exception ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
+            forceCallGarbageCollector: true);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(-999, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(10, changedFinallyValue);
+        Assert.AreEqual(-999, changedExceptionValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_FuncExceptionTResult_FuncTResult_GCF_ShouldPass_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var changedExceptionValue = 101;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; return 0; },
+            onFailureResult: (Exception ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
+            finallyExecFunc: () => { _logger.LogInformation("Finally"); return changedFinallyValue = -888; },
+            forceCallGarbageCollector: false);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(0, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(-888, changedFinallyValue);
+        Assert.AreEqual(101, changedExceptionValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_FuncExceptionTResult_FuncTResult_GCT_ShouldPass_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var changedExceptionValue = 101;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; return 0; },
+            onFailureResult: (Exception ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
+            finallyExecFunc: () => { _logger.LogInformation("Finally"); return changedFinallyValue = -888; },
+            forceCallGarbageCollector: true);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(0, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(-888, changedFinallyValue);
+        Assert.AreEqual(101, changedExceptionValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_FuncExceptionTResult_FuncTResult_GCF_ShouldPass_Exception_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var changedExceptionValue = 101;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; throw new Exception("Ex1"); return 0; },
+            onFailureResult: (Exception ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
+            finallyExecFunc: () => { _logger.LogInformation("Finally"); return changedFinallyValue = -888; },
+            forceCallGarbageCollector: false);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(-999, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(-888, changedFinallyValue);
+        Assert.AreEqual(-999, changedExceptionValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_FuncExceptionTResult_FuncTResult_GCT_ShouldPass_Exception_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var changedExceptionValue = 101;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; throw new Exception("Ex1"); return 0; },
+            onFailureResult: (Exception ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
+            finallyExecFunc: () => { _logger.LogInformation("Finally"); return changedFinallyValue = -888; },
+            forceCallGarbageCollector: true);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(-999, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(-888, changedFinallyValue);
+        Assert.AreEqual(-999, changedExceptionValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_FuncTResult_FuncTResult_GCF_ShouldPass_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var changedExceptionValue = 101;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; return 0; },
+            onFailureResult: () => { return changedExceptionValue = -999; },
+            finallyExecFunc: () => { _logger.LogInformation("Finally"); return changedFinallyValue = -888; },
+            forceCallGarbageCollector: false);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(0, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(-888, changedFinallyValue);
+        Assert.AreEqual(101, changedExceptionValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_FuncTResult_FuncTResult_GCT_ShouldPass_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var changedExceptionValue = 101;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; return 0; },
+            onFailureResult: () => { return changedExceptionValue = -999; },
+            finallyExecFunc: () => { _logger.LogInformation("Finally"); return changedFinallyValue = -888; },
+            forceCallGarbageCollector: true);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(0, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(-888, changedFinallyValue);
+        Assert.AreEqual(101, changedExceptionValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_FuncTResult_FuncTResult_GCF_ShouldPass_Exception_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var changedExceptionValue = 101;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; throw new Exception("Ex1"); return 0; },
+            onFailureResult: () => { return changedExceptionValue = -999; },
+            finallyExecFunc: () => { _logger.LogInformation("Finally"); return changedFinallyValue = -888; },
+            forceCallGarbageCollector: false);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(-999, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(-888, changedFinallyValue);
+        Assert.AreEqual(-999, changedExceptionValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResult_FuncTResult_FuncTResult_GCT_ShouldPass_Exception_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var changedExceptionValue = 101;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; throw new Exception("Ex1"); return 0; },
+            onFailureResult: () => { return changedExceptionValue = -999; },
+            finallyExecFunc: () => { _logger.LogInformation("Finally"); return changedFinallyValue = -888; },
+            forceCallGarbageCollector: true);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(-999, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(-888, changedFinallyValue);
+        Assert.AreEqual(-999, changedExceptionValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResultExecFunc_FuncTResultOnFailureResult_ExceptionLogger_GCF_ShouldPass_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var changedExceptionValue = 101;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; return 0; },
+            onFailureResult: () => { return changedExceptionValue = -999; },
+            exceptionLogger: _logger,
+            forceCallGarbageCollector: false);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(0, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(10, changedFinallyValue);
+        Assert.AreEqual(101, changedExceptionValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResultExecFunc_FuncTResultOnFailureResult_ExceptionLogger_GCT_ShouldPass_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var changedExceptionValue = 101;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; return 0; },
+            onFailureResult: () => { return changedExceptionValue = -999; },
+            exceptionLogger: _logger,
+            forceCallGarbageCollector: true);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(0, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(10, changedFinallyValue);
+        Assert.AreEqual(101, changedExceptionValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResultExecFunc_FuncTResultOnFailureResult_ExceptionLogger_GCF_ShouldPass_Exception_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var changedExceptionValue = 101;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; throw new Exception("Ex1"); return 0; },
+            onFailureResult: () => { return changedExceptionValue = -999; },
+            exceptionLogger: _logger,
+            forceCallGarbageCollector: false);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(-999, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(10, changedFinallyValue);
+        Assert.AreEqual(-999, changedExceptionValue);
+    }
+
+    [TestMethod]
+    public void TryToExec_FuncTResultExecFunc_FuncTResultOnFailureResult_ExceptionLogger_GCT_ShouldPass_Exception_Test()
+    {
+        var changedValue = 0;
+        var changedFinallyValue = 10;
+        var changedExceptionValue = 101;
+        var exec = TryToExecute(
+            execFunc: () => { changedValue++; throw new Exception("Ex1"); return 0; },
+            onFailureResult: () => { return changedExceptionValue = -999; },
+            exceptionLogger: _logger,
+            forceCallGarbageCollector: true);
+
+        Assert.IsNotNull(exec);
+        Assert.AreEqual(-999, exec);
+        Assert.AreEqual(1, changedValue);
+        Assert.AreEqual(10, changedFinallyValue);
+        Assert.AreEqual(-999, changedExceptionValue);
     }
 }
