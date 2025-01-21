@@ -19,7 +19,6 @@ namespace TryToExecute.Extensions
     /// -------------------------------------------------------------------------------------------------
     /// <summary>
     ///     A boolean extensions.
-    ///     SOURCE: https://github.com/I-RzR-I/DomainCommonExtensions/blob/main/src/DomainCommonExtensions/DataTypeExtensions/BoolExtensions.cs
     /// </summary>
     /// =================================================================================================
     internal static class BoolExtensions
@@ -29,6 +28,9 @@ namespace TryToExecute.Extensions
         ///     A bool extension method that query if 'source' is true.
         /// </summary>
         /// <param name="source">The source to act on.</param>
+        /// <remarks>
+        ///     SOURCE: https://github.com/I-RzR-I/DomainCommonExtensions/blob/main/src/DomainCommonExtensions/DataTypeExtensions/BoolExtensions.cs
+        /// </remarks>
         /// <returns>
         ///     True if true, false if not.
         /// </returns>
