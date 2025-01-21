@@ -27,6 +27,6 @@ using System.Resources;
 #if NETSTANDARD2_0_OR_GREATER
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]
 #endif
-[assembly: AssemblyVersion("1.1.2.4376")]
-[assembly: AssemblyFileVersion("1.1.2.4376")]
-[assembly: AssemblyInformationalVersion("1.1.2.4376")]
+[assembly: AssemblyVersion("2.0.0.0")]
+[assembly: AssemblyFileVersion("2.0.0.0")]
+[assembly: AssemblyInformationalVersion("2.0.0.0")]
