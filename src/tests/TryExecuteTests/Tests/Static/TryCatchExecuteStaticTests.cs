@@ -1,6 +1,7 @@
 ﻿#region U S A G E S
 
 using Microsoft.Extensions.Logging;
+using System;
 using TryToExecute.CodeExec;
 
 // ReSharper disable RedundantArgumentDefaultValue
@@ -11,7 +12,7 @@ using TryToExecute.CodeExec;
 
 #endregion
 
-namespace TryExecuteTests;
+namespace TryExecuteTests.Tests.Static;
 
 [TestClass]
 public class TryCatchExecuteStaticTests : TryCatchExecuteStaticBase
@@ -264,7 +265,7 @@ public class TryCatchExecuteStaticTests : TryCatchExecuteStaticBase
         Assert.AreEqual(1, changedValue);
         Assert.AreEqual(10, changedFinallyValue);
     }
-    
+
     [TestMethod]
     public void TryToExec_FuncTResult_TResult_ILogger_FuncTResult_GCF_ShouldPass_Test()
     {
@@ -336,7 +337,7 @@ public class TryCatchExecuteStaticTests : TryCatchExecuteStaticBase
         Assert.AreEqual(1, changedValue);
         Assert.AreEqual(11, changedFinallyValue);
     }
-    
+
     [TestMethod]
     public void TryToExec_FuncTResult_FuncExceptionTResult_GCF_ShouldPass_Test()
     {
@@ -345,7 +346,7 @@ public class TryCatchExecuteStaticTests : TryCatchExecuteStaticBase
         var changedExceptionValue = 101;
         var exec = TryToExecute(
             execFunc: () => { changedValue++; return 0; },
-            onFailureResult: (Exception ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
+            onFailureResult: (ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
             forceCallGarbageCollector: false);
 
         Assert.IsNotNull(exec);
@@ -363,7 +364,7 @@ public class TryCatchExecuteStaticTests : TryCatchExecuteStaticBase
         var changedExceptionValue = 101;
         var exec = TryToExecute(
             execFunc: () => { changedValue++; return 0; },
-            onFailureResult: (Exception ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
+            onFailureResult: (ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
             forceCallGarbageCollector: true);
 
         Assert.IsNotNull(exec);
@@ -381,7 +382,7 @@ public class TryCatchExecuteStaticTests : TryCatchExecuteStaticBase
         var changedExceptionValue = 101;
         var exec = TryToExecute(
             execFunc: () => { changedValue++; throw new Exception("Ex1"); return 0; },
-            onFailureResult: (Exception ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
+            onFailureResult: (ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
             forceCallGarbageCollector: false);
 
         Assert.IsNotNull(exec);
@@ -399,7 +400,7 @@ public class TryCatchExecuteStaticTests : TryCatchExecuteStaticBase
         var changedExceptionValue = 101;
         var exec = TryToExecute(
             execFunc: () => { changedValue++; throw new Exception("Ex1"); return 0; },
-            onFailureResult: (Exception ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
+            onFailureResult: (ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
             forceCallGarbageCollector: true);
 
         Assert.IsNotNull(exec);
@@ -417,7 +418,7 @@ public class TryCatchExecuteStaticTests : TryCatchExecuteStaticBase
         var changedExceptionValue = 101;
         var exec = TryToExecute(
             execFunc: () => { changedValue++; return 0; },
-            onFailureResult: (Exception ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
+            onFailureResult: (ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
             finallyExecFunc: () => { _logger.LogInformation("Finally"); return changedFinallyValue = -888; },
             forceCallGarbageCollector: false);
 
@@ -436,7 +437,7 @@ public class TryCatchExecuteStaticTests : TryCatchExecuteStaticBase
         var changedExceptionValue = 101;
         var exec = TryToExecute(
             execFunc: () => { changedValue++; return 0; },
-            onFailureResult: (Exception ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
+            onFailureResult: (ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
             finallyExecFunc: () => { _logger.LogInformation("Finally"); return changedFinallyValue = -888; },
             forceCallGarbageCollector: true);
 
@@ -455,7 +456,7 @@ public class TryCatchExecuteStaticTests : TryCatchExecuteStaticBase
         var changedExceptionValue = 101;
         var exec = TryToExecute(
             execFunc: () => { changedValue++; throw new Exception("Ex1"); return 0; },
-            onFailureResult: (Exception ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
+            onFailureResult: (ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
             finallyExecFunc: () => { _logger.LogInformation("Finally"); return changedFinallyValue = -888; },
             forceCallGarbageCollector: false);
 
@@ -474,7 +475,7 @@ public class TryCatchExecuteStaticTests : TryCatchExecuteStaticBase
         var changedExceptionValue = 101;
         var exec = TryToExecute(
             execFunc: () => { changedValue++; throw new Exception("Ex1"); return 0; },
-            onFailureResult: (Exception ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
+            onFailureResult: (ex) => { _logger.LogError(ex, "Exception"); return changedExceptionValue = -999; },
             finallyExecFunc: () => { _logger.LogInformation("Finally"); return changedFinallyValue = -888; },
             forceCallGarbageCollector: true);
 

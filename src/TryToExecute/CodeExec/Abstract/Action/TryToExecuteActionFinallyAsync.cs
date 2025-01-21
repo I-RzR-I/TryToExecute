@@ -17,11 +17,9 @@
 #region U S A G E S
 
 using System;
-using System.Diagnostics;
 using TryToExecute.Extensions;
 using TryToExecute.Helpers;
 using System.Threading.Tasks;
-
 
 #if NETSTANDARD2_0_OR_GREATER
 using Microsoft.Extensions.Logging;
@@ -58,30 +56,9 @@ namespace TryToExecute.CodeExec
             bool forceCallGarbageCollector = false)
         {
             execFunc.ThrowIfArgNull(nameof(execFunc));
-
-            try
-            {
-                return await execFunc.Invoke();
-            }
-            catch (Exception e)
-            {
-#if DEBUG
-                Debug.WriteLine(e);
-#if NETSTANDARD1_3_OR_GREATER
-                Console.WriteLine(e);
-#endif
-#endif
-
-                return onFailureResult;
-            }
-            finally
-            {
-                if (finallyExecAction.IsNotNull())
-                    finallyExecAction?.Invoke();
-
-                if (forceCallGarbageCollector.IsTrue())
-                    TryToExecuteAppHelper.ForceCallGC();
-            }
+            
+            return await InternalTryCatchExecHelper.TryItAsync<TResult, Func<Task<TResult>>, TResult, Action>(
+                execFunc, onFailureResult, finallyExecAction, forceCallGarbageCollector);
         }
 
 #if NETSTANDARD2_0_OR_GREATER
@@ -112,30 +89,8 @@ namespace TryToExecute.CodeExec
             execFunc.ThrowIfArgNull(nameof(execFunc));
             exceptionLogger.ThrowIfArgNull(nameof(exceptionLogger));
 
-            try
-            {
-                return await execFunc.Invoke();
-            }
-            catch (Exception e)
-            {
-#if DEBUG
-                Debug.WriteLine(e);
-#if NETSTANDARD1_3_OR_GREATER
-                Console.WriteLine(e);
-#endif
-#endif
-                exceptionLogger.LogError(e, DefaultMessageHelper.InternalErrorOnTryExecute);
-
-                return onFailureResult;
-            }
-            finally
-            {
-                if (finallyExecAction.IsNotNull())
-                    finallyExecAction?.Invoke();
-
-                if (forceCallGarbageCollector.IsTrue())
-                    TryToExecuteAppHelper.ForceCallGC();
-            }
+            return await InternalTryCatchExecHelper.TryItAsync<TResult, Func<Task<TResult>>, TResult, Action, TLogger>(
+                execFunc, onFailureResult, finallyExecAction, exceptionLogger, forceCallGarbageCollector);
         }
 #endif
 
@@ -163,29 +118,8 @@ namespace TryToExecute.CodeExec
             execFunc.ThrowIfArgNull(nameof(execFunc));
             onFailureResult.ThrowIfArgNull(nameof(onFailureResult));
 
-            try
-            {
-                return await execFunc.Invoke();
-            }
-            catch (Exception e)
-            {
-#if DEBUG
-                Debug.WriteLine(e);
-#if NETSTANDARD1_3_OR_GREATER
-                Console.WriteLine(e);
-#endif
-#endif
-
-                return onFailureResult.Invoke();
-            }
-            finally
-            {
-                if (finallyExecAction.IsNotNull())
-                    finallyExecAction?.Invoke();
-
-                if (forceCallGarbageCollector.IsTrue())
-                    TryToExecuteAppHelper.ForceCallGC();
-            }
+            return await InternalTryCatchExecHelper.TryItAsync<TResult, Func<Task<TResult>>, Func<TResult>, Action>(
+                execFunc, onFailureResult, finallyExecAction, forceCallGarbageCollector);
         }
 
         /// -------------------------------------------------------------------------------------------------
@@ -212,29 +146,8 @@ namespace TryToExecute.CodeExec
             execFunc.ThrowIfArgNull(nameof(execFunc));
             onFailureResult.ThrowIfArgNull(nameof(onFailureResult));
 
-            try
-            {
-                return await execFunc.Invoke();
-            }
-            catch (Exception e)
-            {
-#if DEBUG
-                Debug.WriteLine(e);
-#if NETSTANDARD1_3_OR_GREATER
-                Console.WriteLine(e);
-#endif
-#endif
-
-                return onFailureResult.Invoke(e);
-            }
-            finally
-            {
-                if (finallyExecAction.IsNotNull())
-                    finallyExecAction?.Invoke();
-
-                if (forceCallGarbageCollector.IsTrue())
-                    TryToExecuteAppHelper.ForceCallGC();
-            }
+            return await InternalTryCatchExecHelper.TryItAsync<TResult, Func<Task<TResult>>, Func<Exception, TResult>, Action>(
+                execFunc, onFailureResult, finallyExecAction, forceCallGarbageCollector);
         }
 
 #if NETSTANDARD2_0_OR_GREATER
@@ -266,30 +179,8 @@ namespace TryToExecute.CodeExec
             onFailureResult.ThrowIfArgNull(nameof(onFailureResult));
             exceptionLogger.ThrowIfArgNull(nameof(exceptionLogger));
 
-            try
-            {
-                return await execFunc.Invoke();
-            }
-            catch (Exception e)
-            {
-#if DEBUG
-                Debug.WriteLine(e);
-#if NETSTANDARD1_3_OR_GREATER
-                Console.WriteLine(e);
-#endif
-#endif
-                exceptionLogger.LogError(e, DefaultMessageHelper.InternalErrorOnTryExecute);
-
-                return onFailureResult.Invoke();
-            }
-            finally
-            {
-                if (finallyExecAction.IsNotNull())
-                    finallyExecAction?.Invoke();
-
-                if (forceCallGarbageCollector.IsTrue())
-                    TryToExecuteAppHelper.ForceCallGC();
-            }
+            return await InternalTryCatchExecHelper.TryItAsync<TResult, Func<Task<TResult>>, Func<TResult>, Action, TLogger>(
+                execFunc, onFailureResult, finallyExecAction, exceptionLogger, forceCallGarbageCollector);
         }
 #endif
 
@@ -322,30 +213,8 @@ namespace TryToExecute.CodeExec
             onFailureResult.ThrowIfArgNull(nameof(onFailureResult));
             exceptionLogger.ThrowIfArgNull(nameof(exceptionLogger));
 
-            try
-            {
-                return await execFunc.Invoke();
-            }
-            catch (Exception e)
-            {
-#if DEBUG
-                Debug.WriteLine(e);
-#if NETSTANDARD1_3_OR_GREATER
-                Console.WriteLine(e);
-#endif
-#endif
-                exceptionLogger.LogError(e, DefaultMessageHelper.InternalErrorOnTryExecute);
-
-                return onFailureResult.Invoke(e);
-            }
-            finally
-            {
-                if (finallyExecAction.IsNotNull())
-                    finallyExecAction?.Invoke();
-
-                if (forceCallGarbageCollector.IsTrue())
-                    TryToExecuteAppHelper.ForceCallGC();
-            }
+            return await InternalTryCatchExecHelper.TryItAsync<TResult, Func<Task<TResult>>, Func<Exception, TResult>, Action, TLogger>(
+                execFunc, onFailureResult, finallyExecAction, exceptionLogger, forceCallGarbageCollector);
         }
 #endif
 
@@ -373,29 +242,8 @@ namespace TryToExecute.CodeExec
             execFunc.ThrowIfArgNull(nameof(execFunc));
             onFailureResult.ThrowIfArgNull(nameof(onFailureResult));
 
-            try
-            {
-                return await execFunc.Invoke();
-            }
-            catch (Exception e)
-            {
-#if DEBUG
-                Debug.WriteLine(e);
-#if NETSTANDARD1_3_OR_GREATER
-                Console.WriteLine(e);
-#endif
-#endif
-
-                return await onFailureResult.Invoke();
-            }
-            finally
-            {
-                if (finallyExecAction.IsNotNull())
-                    finallyExecAction?.Invoke();
-
-                if (forceCallGarbageCollector.IsTrue())
-                    TryToExecuteAppHelper.ForceCallGC();
-            }
+            return await InternalTryCatchExecHelper.TryItAsync<TResult, Func<Task<TResult>>, Func<Task<TResult>>, Action>(
+                execFunc, onFailureResult, finallyExecAction, forceCallGarbageCollector);
         }
 
         /// -------------------------------------------------------------------------------------------------
@@ -422,29 +270,8 @@ namespace TryToExecute.CodeExec
             execFunc.ThrowIfArgNull(nameof(execFunc));
             onFailureResult.ThrowIfArgNull(nameof(onFailureResult));
 
-            try
-            {
-                return await execFunc.Invoke();
-            }
-            catch (Exception e)
-            {
-#if DEBUG
-                Debug.WriteLine(e);
-#if NETSTANDARD1_3_OR_GREATER
-                Console.WriteLine(e);
-#endif
-#endif
-
-                return await onFailureResult.Invoke(e);
-            }
-            finally
-            {
-                if (finallyExecAction.IsNotNull())
-                    finallyExecAction?.Invoke();
-
-                if (forceCallGarbageCollector.IsTrue())
-                    TryToExecuteAppHelper.ForceCallGC();
-            }
+            return await InternalTryCatchExecHelper.TryItAsync<TResult, Func<Task<TResult>>, Func<Exception, Task<TResult>>, Action>(
+                execFunc, onFailureResult, finallyExecAction, forceCallGarbageCollector);
         }
 
 #if NETSTANDARD2_0_OR_GREATER
@@ -476,30 +303,8 @@ namespace TryToExecute.CodeExec
             onFailureResult.ThrowIfArgNull(nameof(onFailureResult));
             exceptionLogger.ThrowIfArgNull(nameof(exceptionLogger));
 
-            try
-            {
-                return await execFunc.Invoke();
-            }
-            catch (Exception e)
-            {
-#if DEBUG
-                Debug.WriteLine(e);
-#if NETSTANDARD1_3_OR_GREATER
-                Console.WriteLine(e);
-#endif
-#endif
-                exceptionLogger.LogError(e, DefaultMessageHelper.InternalErrorOnTryExecute);
-
-                return await onFailureResult.Invoke();
-            }
-            finally
-            {
-                if (finallyExecAction.IsNotNull())
-                    finallyExecAction?.Invoke();
-
-                if (forceCallGarbageCollector.IsTrue())
-                    TryToExecuteAppHelper.ForceCallGC();
-            }
+            return await InternalTryCatchExecHelper.TryItAsync<TResult, Func<Task<TResult>>, Func<Task<TResult>>, Action, TLogger>(
+                execFunc, onFailureResult, finallyExecAction, exceptionLogger, forceCallGarbageCollector);
         }
 #endif
 
@@ -531,31 +336,9 @@ namespace TryToExecute.CodeExec
             execFunc.ThrowIfArgNull(nameof(execFunc));
             onFailureResult.ThrowIfArgNull(nameof(onFailureResult));
             exceptionLogger.ThrowIfArgNull(nameof(exceptionLogger));
-
-            try
-            {
-                return await execFunc.Invoke();
-            }
-            catch (Exception e)
-            {
-#if DEBUG
-                Debug.WriteLine(e);
-#if NETSTANDARD1_3_OR_GREATER
-                Console.WriteLine(e);
-#endif
-#endif
-                exceptionLogger.LogError(e, DefaultMessageHelper.InternalErrorOnTryExecute);
-
-                return await onFailureResult.Invoke(e);
-            }
-            finally
-            {
-                if (finallyExecAction.IsNotNull())
-                    finallyExecAction?.Invoke();
-
-                if (forceCallGarbageCollector.IsTrue())
-                    TryToExecuteAppHelper.ForceCallGC();
-            }
+            
+            return await InternalTryCatchExecHelper.TryItAsync<TResult, Func<Task<TResult>>, Func<Exception, Task<TResult>>, Action, TLogger>(
+                execFunc, onFailureResult, finallyExecAction, exceptionLogger, forceCallGarbageCollector);
         }
 #endif
     }

@@ -17,6 +17,8 @@
 using AggregatedGenericResultMessage;
 using AggregatedGenericResultMessage.Extensions.Result;
 using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
 using TryToExecute.CodeExec;
 
 // ReSharper disable RedundantLambdaParameterType
@@ -24,12 +26,12 @@ using TryToExecute.CodeExec;
 #pragma warning disable CS8618
 #pragma warning disable CS0162
 
-namespace TryExecuteTests;
+namespace TryExecuteTests.Tests.Abstract;
 
 [TestClass]
-public class TryCatchExecuteStaticExceptionFuncTests : TryCatchExecuteStaticBase
+public class TryCatchExecuteExceptionFuncTests : TryCatchExecuteBase
 {
-    private ILogger<TryCatchExecuteStaticExceptionFuncTests> _logger;
+    private ILogger<TryCatchExecuteExceptionFuncTests> _logger;
 
     [TestInitialize]
     public void Init()
@@ -37,10 +39,10 @@ public class TryCatchExecuteStaticExceptionFuncTests : TryCatchExecuteStaticBase
         var loggerFactory = LoggerFactory.Create(builder =>
             builder.AddFilter("Microsoft", LogLevel.Warning)
                 .AddFilter("System", LogLevel.Warning)
-                .AddFilter("TryCatchExecuteStaticExceptionFuncTests", LogLevel.Debug)
+                .AddFilter("TryCatchExecuteExceptionFuncTests", LogLevel.Debug)
                 .AddConsole());
 
-        _logger = loggerFactory.CreateLogger<TryCatchExecuteStaticExceptionFuncTests>();
+        _logger = loggerFactory.CreateLogger<TryCatchExecuteExceptionFuncTests>();
     }
 
     [TestMethod]
@@ -50,7 +52,7 @@ public class TryCatchExecuteStaticExceptionFuncTests : TryCatchExecuteStaticBase
         var changedFinallyValue = 10;
         var exec = TryToExecute(
             () => { changedValue++; return Result.Success(); },
-            (Exception ex) =>
+            (ex) =>
             {
                 Console.WriteLine(ex);
                 changedValue++;
@@ -80,7 +82,7 @@ public class TryCatchExecuteStaticExceptionFuncTests : TryCatchExecuteStaticBase
 
                 return Result.Success();
             },
-            (Exception ex) =>
+            (ex) =>
             {
                 Console.WriteLine(ex);
                 changedValue--;
@@ -98,73 +100,5 @@ public class TryCatchExecuteStaticExceptionFuncTests : TryCatchExecuteStaticBase
         Assert.AreEqual(11, changedFinallyValue);
     }
 
-    [TestMethod]
-    public async Task TryToExecAsync_Ex_ShouldPass_Test()
-    {
-        var changedValue = 0;
-        var changedFinallyValue = 10;
-        var exec = await TryToExecuteAsync(
-            async () =>
-            {
-                changedValue++; 
-                
-                return await Task.FromResult(Result.Success());
-            },
-            async (Exception ex) =>
-            {
-                Console.WriteLine(ex);
-                changedValue++;
-
-                return await Task.FromResult(
-                    Result.Failure("FAil")
-                    .WithError(ex));
-            },
-            async () =>
-            {
-                changedFinallyValue++; 
-
-                return await Task.FromResult(Result.Success("Finally"));
-            }, true);
-
-        Assert.IsNotNull(exec);
-        Assert.AreEqual(true, exec.IsSuccess);
-        Assert.AreEqual(string.Empty, exec.GetFirstMessage());
-        Assert.AreEqual(1, changedValue);
-        Assert.AreEqual(11, changedFinallyValue);
-    }
-
-    [TestMethod]
-    public async Task TryToExecAsync_Ex_ShouldPass_WithException_Test()
-    {
-        var changedValue = 0;
-        var changedFinallyValue = 10;
-        var exec = await TryToExecuteAsync(
-            async () =>
-            {
-                throw new Exception("Ex1");
-                changedValue++;
-
-                return await Task.FromResult(Result.Success());
-            },
-            async (Exception ex) =>
-            {
-                Console.WriteLine(ex);
-                changedValue--;
-
-                return await Task.FromResult(Result.Failure("FAil").WithError(ex));
-            },
-            async () =>
-            {
-                changedFinallyValue++; 
-                
-                return await Task.FromResult(Result.Success("Finally"));
-            }, true);
-
-        Assert.IsNotNull(exec);
-        Assert.AreEqual(false, exec.IsSuccess);
-        Assert.AreEqual("FAil", exec.GetFirstMessage());
-        Assert.AreEqual("Ex1", exec.Messages.ToArray()[1].Message.Info);
-        Assert.AreEqual(-1, changedValue);
-        Assert.AreEqual(11, changedFinallyValue);
-    }
+   
 }
