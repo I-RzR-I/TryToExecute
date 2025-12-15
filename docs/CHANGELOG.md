@@ -1,3 +1,8 @@
+### **v2.1.0.7515** [[RzR](mailto:108324929+I-RzR-I@users.noreply.github.com)] 15-12-2025
+* [0a85d60] (RzR) -> Auto commit uncommited files
+* [65d00ee] (RzR) -> Add code version generate scripts
+* [fbae95c] (RzR) -> Add `TryBuilder` helper.
+
 ### v1.1.2.4376
 -> Add `Func<Exception, Task<TResult>>` and `Func<Exception, TResult>` execute in catch block; <br/>
 
