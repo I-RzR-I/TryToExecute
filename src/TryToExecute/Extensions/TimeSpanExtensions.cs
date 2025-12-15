@@ -1,12 +1,12 @@
 ﻿// ***********************************************************************
 //  Assembly         : RzR.Shared.Extensions.TryToExecute
 //  Author           : RzR
-//  Created On       : 2024-12-03 20:58
+//  Created On       : 2025-11-17 00:11
 // 
 //  Last Modified By : RzR
-//  Last Modified On : 2024-12-03 20:58
+//  Last Modified On : 2025-11-17 08:09
 // ***********************************************************************
-//  <copyright file="DefaultMessageHelper.cs" company="RzR SOFT & TECH">
+//  <copyright file="TimeSpanExtensions.cs" company="RzR SOFT & TECH">
 //   Copyright © RzR. All rights reserved.
 //  </copyright>
 // 
@@ -14,29 +14,50 @@
 //  </summary>
 // ***********************************************************************
 
-// ReSharper disable ClassNeverInstantiated.Global
+#region U S A G E S
 
-namespace TryToExecute.Helpers
+using System;
+using System.Diagnostics;
+
+#endregion
+
+namespace TryToExecute.Extensions
 {
     /// -------------------------------------------------------------------------------------------------
     /// <summary>
-    ///     A default message helper.
+    ///     A time span extensions.
     /// </summary>
     /// =================================================================================================
-    internal class DefaultMessageHelper
+    internal static class TimeSpanExtensions
     {
         /// -------------------------------------------------------------------------------------------------
         /// <summary>
-        ///     (Immutable) the internal error on try to execute.
+        ///     A TimeSpan extension method that internal sleep.
         /// </summary>
+        /// <param name="timeSpan">The timeSpan to act on.</param>
         /// =================================================================================================
-        internal const string InternalErrorOnTryExecute = "An internal error occurred while trying to execute generic try/catch!";
+        internal static void InternalSleep(this TimeSpan timeSpan)
+        {
+            if (timeSpan.TotalMilliseconds <= 0)
+                return;
+
+            var sw = Stopwatch.StartNew();
+            while (sw.ElapsedMilliseconds < timeSpan.TotalMilliseconds)
+            {
+                // Busy-wait
+            }
+        }
 
         /// -------------------------------------------------------------------------------------------------
         /// <summary>
-        ///     (Immutable) the invalid operation retry policy.
+        ///     A TimeSpan extension method that query if 'timeSpan' is less or zero.
         /// </summary>
+        /// <param name="timeSpan">The timeSpan to act on.</param>
+        /// <returns>
+        ///     True if less or zero, false if not.
+        /// </returns>
         /// =================================================================================================
-        internal const string InvalidOperationRetryPolicy = "An internal error occurred on RetryPolicy failed without capturing an exception.";
+        internal static bool IsLessOrZero(this TimeSpan timeSpan) 
+            => timeSpan <= TimeSpan.Zero;
     }
 }

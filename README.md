@@ -11,6 +11,15 @@ In the following flow on trying to implement try execution (`TryToExecute`, `Try
 - code for the catch block `catch { }`;
 - code for finally block `finally { }`.
 
+Or can be used `TryBuilder` for fluent invoke.
+```csharp
+TryBuilder.Do(async () => await FooAsync())
+          .Catch<IOException>(ex => ...)
+          .Finally(() => ...)
+          .ExecuteAsync();
+```
+
+
 To understand more efficiently how you can use available functionalities please consult the [using documentation/file](docs/usage.md).
 
 **In case you wish to use it in your project, u can install the package from <a href="https://www.nuget.org/packages/TryToExecute" target="_blank">nuget.org</a>** or specify what version you want:
