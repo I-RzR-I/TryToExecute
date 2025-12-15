@@ -36,5 +36,16 @@ namespace TryToExecute.Extensions
         /// </returns>
         /// =================================================================================================
         internal static bool IsTrue(this bool source) => source.IsNotNull() && source.Equals(true);
+
+        /// -------------------------------------------------------------------------------------------------
+        /// <summary>
+        ///     A bool extension method that query if 'source' is false.
+        /// </summary>
+        /// <param name="source">The source to act on.</param>
+        /// <returns>
+        ///     True if false, false if not.
+        /// </returns>
+        /// =================================================================================================
+        internal static bool IsFalse(this bool source) => !source.IsTrue();
     }
 }

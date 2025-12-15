@@ -20,7 +20,11 @@ namespace TryToExecute.Helpers
     /// <summary>
     ///     A request analyze helper.
     /// </summary>
-    /// TODO: In the feature versions create a more correct way to check whether the request is a Task.
+    /// <remarks>
+    /// 
+    ///     TODO: In the feature versions create a more correct way to check whether the request is a Task.
+    ///     
+    /// </remarks>
     /// =================================================================================================
     internal static class RequestAnalyzeHelper
     {

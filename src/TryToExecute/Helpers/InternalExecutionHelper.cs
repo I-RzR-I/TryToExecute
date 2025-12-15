@@ -46,7 +46,7 @@ namespace TryToExecute.Helpers
         ///     Internal execute.
         /// </summary>
         /// <typeparam name="TExecuteResult">Type of the execute result.</typeparam>
-        /// <typeparam name="TExecute">Type of the execute.</typeparam>
+        /// <typeparam name="TExecute">Type of the execution.</typeparam>
         /// <param name="execRequest">The execute request.</param>
         /// <param name="exception">(Optional) The exception.</param>
         /// <returns>
@@ -88,7 +88,7 @@ namespace TryToExecute.Helpers
         ///     Internal execute.
         /// </summary>
         /// <typeparam name="TExecuteResult">Type of the execute result.</typeparam>
-        /// <typeparam name="TExecute">Type of the execute.</typeparam>
+        /// <typeparam name="TExecute">Type of the execution.</typeparam>
         /// <typeparam name="TParam1">Type of the parameter 1.</typeparam>
         /// <param name="execRequest">The execute request.</param>
         /// <param name="param">The parameter.</param>
@@ -131,7 +131,7 @@ namespace TryToExecute.Helpers
         ///     Internal execute asynchronous.
         /// </summary>
         /// <typeparam name="TExecuteResult">Type of the execute result.</typeparam>
-        /// <typeparam name="TExecute">Type of the execute.</typeparam>
+        /// <typeparam name="TExecute">Type of the execution.</typeparam>
         /// <param name="execRequest">The execute request.</param>
         /// <param name="exception">(Optional) The exception.</param>
         /// <returns>
@@ -181,7 +181,7 @@ namespace TryToExecute.Helpers
         ///     Internal execute asynchronous.
         /// </summary>
         /// <typeparam name="TExecuteResult">Type of the execute result.</typeparam>
-        /// <typeparam name="TExecute">Type of the execute.</typeparam>
+        /// <typeparam name="TExecute">Type of the execution.</typeparam>
         /// <typeparam name="TParam1">Type of the parameter 1.</typeparam>
         /// <param name="execRequest">The execute request.</param>
         /// <param name="param1">The first parameter.</param>
