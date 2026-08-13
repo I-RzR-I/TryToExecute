@@ -1,3 +1,7 @@
+### **v3.0.0.34** [[RzR](mailto:108324929+I-RzR-I@users.noreply.github.com)] 14-08-2026
+* [cb87cc9] (RzR) -> Auto commit uncommited files
+* [50e0afd] (RzR) -> Add CancellationToken support across async APIs and fix TryBuilder
+
 ### **v2.1.0.7515** [[RzR](mailto:108324929+I-RzR-I@users.noreply.github.com)] 15-12-2025
 * [0a85d60] (RzR) -> Auto commit uncommited files
 * [65d00ee] (RzR) -> Add code version generate scripts
