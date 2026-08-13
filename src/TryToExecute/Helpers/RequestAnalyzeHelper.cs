@@ -14,17 +14,21 @@
 //  </summary>
 // ***********************************************************************
 
+#region U S A G E S
+
+using System;
+using System.Reflection;
+using System.Threading.Tasks;
+using TryToExecute.Extensions;
+
+#endregion
+
 namespace TryToExecute.Helpers
 {
     /// -------------------------------------------------------------------------------------------------
     /// <summary>
     ///     A request analyze helper.
     /// </summary>
-    /// <remarks>
-    /// 
-    ///     TODO: In the feature versions create a more correct way to check whether the request is a Task.
-    ///     
-    /// </remarks>
     /// =================================================================================================
     internal static class RequestAnalyzeHelper
     {
@@ -52,10 +56,18 @@ namespace TryToExecute.Helpers
         /// =================================================================================================
         internal static bool CheckIfIsTaskType<TTaskParam>()
         {
-            var requestType = typeof(TTaskParam);
+            var type = typeof(TTaskParam);
 
-            if (requestType.FullName!.Contains("System.Threading.Tasks.Task"))
+            if (typeof(Task).IsAssignableFromPortable(type))
                 return true;
+
+            if (typeof(Delegate).IsAssignableFromPortable(type))
+            {
+                var invoke = type.GetTypeInfo().GetDeclaredMethod("Invoke");
+                if (invoke.IsNotNull() && typeof(Task).IsAssignableFromPortable(invoke.ReturnType))
+                    return true;
+            }
+
             return false;
         }
     }

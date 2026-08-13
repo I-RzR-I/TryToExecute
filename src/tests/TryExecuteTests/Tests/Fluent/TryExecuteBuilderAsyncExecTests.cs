@@ -1,19 +1,3 @@
-﻿// ***********************************************************************
-//  Assembly         : RzR.Shared.Extensions.TryExecuteTests
-//  Author           : RzR
-//  Created On       : 2025-11-30 21:11
-// 
-//  Last Modified By : RzR
-//  Last Modified On : 2025-11-30 21:03
-// ***********************************************************************
-//  <copyright file="TryExecuteBuilderAsyncExecTests.cs" company="RzR SOFT & TECH">
-//   Copyright © RzR. All rights reserved.
-//  </copyright>
-// 
-//  <summary>
-//  </summary>
-// ***********************************************************************
-
 using System;
 using System.Threading.Tasks;
 using TryToExecute.Builder;
@@ -248,17 +232,17 @@ namespace TryExecuteTests.Tests.Fluent
             {
                 throw new ArgumentNullException("Ex2");
             })
-            .Catch<ArgumentException>(async exception =>
-            {
-                await Task.CompletedTask;
-                Console.Write(exception.ToString());
-                exceptionResult = 1;
-            })
             .Catch<ArgumentNullException>(async (exception, token) =>
             {
                 await Task.CompletedTask;
                 Console.Write(exception.ToString());
                 exceptionResult = 2;
+            })
+            .Catch<ArgumentException>(async exception =>
+            {
+                await Task.CompletedTask;
+                Console.Write(exception.ToString());
+                exceptionResult = 1;
             })
             .Catch<NullReferenceException>(async (exception, token) =>
             {
@@ -280,4 +264,3 @@ namespace TryExecuteTests.Tests.Fluent
         }
     }
 }
-

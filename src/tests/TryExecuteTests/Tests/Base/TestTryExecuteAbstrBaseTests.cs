@@ -1,19 +1,3 @@
-﻿// ***********************************************************************
-//  Assembly         : RzR.Shared.Extensions.TryExecuteTests
-//  Author           : RzR
-//  Created On       : 2025-01-20 19:41
-// 
-//  Last Modified By : RzR
-//  Last Modified On : 2025-01-20 19:41
-// ***********************************************************************
-//  <copyright file="TestTryExecuteAbstrBaseTests.cs" company="RzR SOFT & TECH">
-//   Copyright © RzR. All rights reserved.
-//  </copyright>
-// 
-//  <summary>
-//  </summary>
-// ***********************************************************************
-
 using AggregatedGenericResultMessage.Abstractions;
 using AggregatedGenericResultMessage;
 using AggregatedGenericResultMessage.Enums;
@@ -22,9 +6,6 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System;
 using TryExecuteTests.Base;
-// ReSharper disable RedundantLambdaParameterType
-// ReSharper disable UnusedParameter.Local
-// ReSharper disable NotAccessedField.Local
 #pragma warning disable CS0162
 
 namespace TryExecuteTests.Tests.Base;

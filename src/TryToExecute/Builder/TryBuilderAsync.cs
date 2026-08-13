@@ -336,7 +336,7 @@ namespace TryToExecute.Builder
 
                 return TryResult<T>.FromValue(value);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsTypeOfOperationCancel().IsFalse())
             {
                 foreach (var exceptionHandler in BaseCatchHandlers)
                 {
@@ -370,7 +370,7 @@ namespace TryToExecute.Builder
                         return TryResult<T>.FromValue(fallback);
                     }
                 }
-                catch (Exception fallbackException)
+                catch (Exception fallbackException) when (fallbackException.IsTypeOfOperationCancel().IsFalse())
                 {
                     /*
                      *  If fallback throws,

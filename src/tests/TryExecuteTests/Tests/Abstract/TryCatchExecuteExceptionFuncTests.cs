@@ -1,19 +1,3 @@
-﻿// ***********************************************************************
-//  Assembly         : RzR.Shared.Extensions.TryExecuteTests
-//  Author           : RzR
-//  Created On       : 2024-12-08 22:19
-// 
-//  Last Modified By : RzR
-//  Last Modified On : 2024-12-08 22:19
-// ***********************************************************************
-//  <copyright file="TryCatchExecuteStaticExceptionFuncTests.cs" company="RzR SOFT & TECH">
-//   Copyright © RzR. All rights reserved.
-//  </copyright>
-// 
-//  <summary>
-//  </summary>
-// ***********************************************************************
-
 using AggregatedGenericResultMessage;
 using AggregatedGenericResultMessage.Extensions.Result;
 using Microsoft.Extensions.Logging;
@@ -21,8 +5,6 @@ using System;
 using System.Linq;
 using TryToExecute.CodeExec;
 
-// ReSharper disable RedundantLambdaParameterType
-// ReSharper disable NotAccessedField.Local
 #pragma warning disable CS8618
 #pragma warning disable CS0162
 
@@ -100,5 +82,4 @@ public class TryCatchExecuteExceptionFuncTests : TryCatchExecuteBase
         Assert.AreEqual(11, changedFinallyValue);
     }
 
-   
 }

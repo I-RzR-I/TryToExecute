@@ -18,6 +18,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Threading;
 using System.Threading.Tasks;
 using TryToExecute.Extensions;
 
@@ -110,6 +111,57 @@ namespace TryToExecute.Helpers
                     : executor.InternalExecute<TExecResult, TExecRequest>(execRequest);
             }
             catch (Exception e)
+            {
+#if DEBUG
+                Debug.WriteLine(e);
+#if NETSTANDARD1_3_OR_GREATER
+                Console.WriteLine(e);
+#endif
+#endif
+                return RequestAnalyzeHelper.CheckIfIsTaskType<TFailureExecRequest>()
+                    ? await executor.InternalExecuteAsync<TExecResult, TFailureExecRequest, Exception>(onFailureRequest, e)
+                    : executor.InternalExecute<TExecResult, TFailureExecRequest, Exception>(onFailureRequest, e);
+            }
+            finally
+            {
+                RefTypeParamHelper.ToDefaultValue(ref execRequest, ref onFailureRequest, ref executor);
+
+                if (forceCallGarbageCollector.IsTrue())
+                    TryToExecuteAppHelper.ForceCallGC();
+            }
+        }
+
+        /// -------------------------------------------------------------------------------------------------
+        /// <summary>
+        ///     Try request execution asynchronous, with cancellation support.
+        /// </summary>
+        /// <typeparam name="TExecResult">Type of the execute result.</typeparam>
+        /// <typeparam name="TExecRequest">Type of the execute request.</typeparam>
+        /// <typeparam name="TFailureExecRequest">Type of the failure execute request.</typeparam>
+        /// <param name="execRequest">The execute request.</param>
+        /// <param name="onFailureRequest">The on failure request.</param>
+        /// <param name="forceCallGarbageCollector">
+        ///     (Optional) True to force call garbage collector.
+        /// </param>
+        /// <param name="cancellationToken">(Optional) The cancellation token.</param>
+        /// <returns>
+        ///     A TExecResult.
+        /// </returns>
+        /// =================================================================================================
+        internal static async Task<TExecResult> TryItAsync<TExecResult, TExecRequest, TFailureExecRequest>(
+            TExecRequest execRequest,
+            TFailureExecRequest onFailureRequest,
+            bool forceCallGarbageCollector = false,
+            CancellationToken cancellationToken = default)
+        {
+            var executor = InternalExecutionHelper.Instance;
+            try
+            {
+                return RequestAnalyzeHelper.CheckIfIsTaskType<TExecRequest>()
+                    ? await executor.InternalExecuteAsync<TExecResult, TExecRequest>(execRequest, cancellationToken)
+                    : executor.InternalExecute<TExecResult, TExecRequest>(execRequest);
+            }
+            catch (Exception e) when (e.IsTypeOfOperationCancel().IsFalse())
             {
 #if DEBUG
                 Debug.WriteLine(e);
@@ -237,6 +289,65 @@ namespace TryToExecute.Helpers
             }
         }
 
+        /// -------------------------------------------------------------------------------------------------
+        /// <summary>
+        ///     Try request execution asynchronous, with cancellation support.
+        /// </summary>
+        /// <typeparam name="TExecResult">Type of the execute result.</typeparam>
+        /// <typeparam name="TExecRequest">Type of the execute request.</typeparam>
+        /// <typeparam name="TFailureExecRequest">Type of the failure execute request.</typeparam>
+        /// <typeparam name="TFinallyExecRequest">Type of the finally execute request.</typeparam>
+        /// <param name="execRequest">The execute request.</param>
+        /// <param name="onFailureRequest">The on failure request.</param>
+        /// <param name="onFinallyRequest">The on finally request.</param>
+        /// <param name="forceCallGarbageCollector">
+        ///     (Optional) True to force call garbage collector.
+        /// </param>
+        /// <param name="cancellationToken">(Optional) The cancellation token.</param>
+        /// <returns>
+        ///     A TExecResult.
+        /// </returns>
+        /// =================================================================================================
+        internal static async Task<TExecResult> TryItAsync<TExecResult, TExecRequest, TFailureExecRequest, TFinallyExecRequest>(
+            TExecRequest execRequest,
+            TFailureExecRequest onFailureRequest,
+            TFinallyExecRequest onFinallyRequest,
+            bool forceCallGarbageCollector = false,
+            CancellationToken cancellationToken = default)
+        {
+            var executor = InternalExecutionHelper.Instance;
+            try
+            {
+                return RequestAnalyzeHelper.CheckIfIsTaskType<TExecRequest>()
+                    ? await executor.InternalExecuteAsync<TExecResult, TExecRequest>(execRequest, cancellationToken)
+                    : executor.InternalExecute<TExecResult, TExecRequest>(execRequest);
+            }
+            catch (Exception e) when (e.IsTypeOfOperationCancel().IsFalse())
+            {
+#if DEBUG
+                Debug.WriteLine(e);
+#if NETSTANDARD1_3_OR_GREATER
+                Console.WriteLine(e);
+#endif
+#endif
+                return RequestAnalyzeHelper.CheckIfIsTaskType<TFailureExecRequest>()
+                    ? await executor.InternalExecuteAsync<TExecResult, TFailureExecRequest, Exception>(onFailureRequest, e)
+                    : executor.InternalExecute<TExecResult, TFailureExecRequest, Exception>(onFailureRequest, e);
+            }
+            finally
+            {
+                if (RequestAnalyzeHelper.CheckIfIsTaskType<TFinallyExecRequest>())
+                    await executor.InternalExecuteAsync<TExecResult, TFinallyExecRequest>(onFinallyRequest, cancellationToken);
+                else
+                    executor.InternalExecute<TExecResult, TFinallyExecRequest>(onFinallyRequest);
+
+                RefTypeParamHelper.ToDefaultValue(ref execRequest, ref onFailureRequest, ref onFinallyRequest, ref executor);
+
+                if (forceCallGarbageCollector.IsTrue())
+                    TryToExecuteAppHelper.ForceCallGC();
+            }
+        }
+
 #if NETSTANDARD2_0_OR_GREATER
 
         /// -------------------------------------------------------------------------------------------------
@@ -321,6 +432,62 @@ namespace TryToExecute.Helpers
                     : executor.InternalExecute<TExecResult, TExecRequest>(execRequest);
             }
             catch (Exception e)
+            {
+#if DEBUG
+                Debug.WriteLine(e);
+#if NETSTANDARD1_3_OR_GREATER
+                Console.WriteLine(e);
+#endif
+#endif
+                exceptionLogger.LogError(e, DefaultMessageHelper.InternalErrorOnTryExecute);
+
+                return RequestAnalyzeHelper.CheckIfIsTaskType<TFailureExecRequest>()
+                    ? await executor.InternalExecuteAsync<TExecResult, TFailureExecRequest, Exception>(onFailureRequest, e)
+                    : executor.InternalExecute<TExecResult, TFailureExecRequest, Exception>(onFailureRequest, e);
+            }
+            finally
+            {
+                RefTypeParamHelper.ToDefaultValue(ref execRequest, ref onFailureRequest, ref executor, ref exceptionLogger);
+
+                if (forceCallGarbageCollector.IsTrue())
+                    TryToExecuteAppHelper.ForceCallGC();
+            }
+        }
+
+        /// -------------------------------------------------------------------------------------------------
+        /// <summary>
+        ///     Try request execution asynchronous, with cancellation support.
+        /// </summary>
+        /// <typeparam name="TExecResult">Type of the execute result.</typeparam>
+        /// <typeparam name="TExecRequest">Type of the execute request.</typeparam>
+        /// <typeparam name="TFailureExecRequest">Type of the failure execute request.</typeparam>
+        /// <typeparam name="TLogger">Type of the application logger.</typeparam>
+        /// <param name="execRequest">The execute request.</param>
+        /// <param name="onFailureRequest">The on failure request.</param>
+        /// <param name="exceptionLogger">The on application logger.</param>
+        /// <param name="forceCallGarbageCollector">
+        ///     (Optional) True to force call garbage collector.
+        /// </param>
+        /// <param name="cancellationToken">(Optional) The cancellation token.</param>
+        /// <returns>
+        ///     A TExecResult.
+        /// </returns>
+        /// =================================================================================================
+        internal static async Task<TExecResult> TryItAsync<TExecResult, TExecRequest, TFailureExecRequest, TLogger>(
+            TExecRequest execRequest,
+            TFailureExecRequest onFailureRequest,
+            ILogger<TLogger> exceptionLogger,
+            bool forceCallGarbageCollector = false,
+            CancellationToken cancellationToken = default)
+        {
+            var executor = InternalExecutionHelper.Instance;
+            try
+            {
+                return RequestAnalyzeHelper.CheckIfIsTaskType<TExecRequest>()
+                    ? await executor.InternalExecuteAsync<TExecResult, TExecRequest>(execRequest, cancellationToken)
+                    : executor.InternalExecute<TExecResult, TExecRequest>(execRequest);
+            }
+            catch (Exception e) when (e.IsTypeOfOperationCancel().IsFalse())
             {
 #if DEBUG
                 Debug.WriteLine(e);
@@ -450,6 +617,70 @@ namespace TryToExecute.Helpers
             {
                 if (RequestAnalyzeHelper.CheckIfIsTaskType<TFinallyExecRequest>())
                     await executor.InternalExecuteAsync<TExecResult, TFinallyExecRequest>(onFinallyRequest);
+                else
+                    executor.InternalExecute<TExecResult, TFinallyExecRequest>(onFinallyRequest);
+
+                RefTypeParamHelper.ToDefaultValue(ref execRequest, ref onFailureRequest, ref onFinallyRequest, ref executor, ref exceptionLogger);
+
+                if (forceCallGarbageCollector.IsTrue())
+                    TryToExecuteAppHelper.ForceCallGC();
+            }
+        }
+
+        /// -------------------------------------------------------------------------------------------------
+        /// <summary>
+        ///     Try request execution asynchronous, with cancellation support.
+        /// </summary>
+        /// <typeparam name="TExecResult">Type of the execute result.</typeparam>
+        /// <typeparam name="TExecRequest">Type of the execute request.</typeparam>
+        /// <typeparam name="TFailureExecRequest">Type of the failure execute request.</typeparam>
+        /// <typeparam name="TFinallyExecRequest">Type of the finally execute request.</typeparam>
+        /// <typeparam name="TLogger">Type of the application logger.</typeparam>
+        /// <param name="execRequest">The execute request.</param>
+        /// <param name="onFailureRequest">The on failure request.</param>
+        /// <param name="onFinallyRequest">The on finally request.</param>
+        /// <param name="exceptionLogger">The on application logger.</param>
+        /// <param name="forceCallGarbageCollector">
+        ///     (Optional) True to force call garbage collector.
+        /// </param>
+        /// <param name="cancellationToken">(Optional) The cancellation token.</param>
+        /// <returns>
+        ///     A TExecResult.
+        /// </returns>
+        /// =================================================================================================
+        internal static async Task<TExecResult> TryItAsync<TExecResult, TExecRequest, TFailureExecRequest, TFinallyExecRequest, TLogger>(
+            TExecRequest execRequest,
+            TFailureExecRequest onFailureRequest,
+            TFinallyExecRequest onFinallyRequest,
+            ILogger<TLogger> exceptionLogger,
+            bool forceCallGarbageCollector = false,
+            CancellationToken cancellationToken = default)
+        {
+            var executor = InternalExecutionHelper.Instance;
+            try
+            {
+                return RequestAnalyzeHelper.CheckIfIsTaskType<TExecRequest>()
+                    ? await executor.InternalExecuteAsync<TExecResult, TExecRequest>(execRequest, cancellationToken)
+                    : executor.InternalExecute<TExecResult, TExecRequest>(execRequest);
+            }
+            catch (Exception e) when (e.IsTypeOfOperationCancel().IsFalse())
+            {
+#if DEBUG
+                Debug.WriteLine(e);
+#if NETSTANDARD1_3_OR_GREATER
+                Console.WriteLine(e);
+#endif
+#endif
+                exceptionLogger.LogError(e, DefaultMessageHelper.InternalErrorOnTryExecute);
+
+                return RequestAnalyzeHelper.CheckIfIsTaskType<TFailureExecRequest>()
+                    ? await executor.InternalExecuteAsync<TExecResult, TFailureExecRequest, Exception>(onFailureRequest, e)
+                    : executor.InternalExecute<TExecResult, TFailureExecRequest, Exception>(onFailureRequest, e);
+            }
+            finally
+            {
+                if (RequestAnalyzeHelper.CheckIfIsTaskType<TFinallyExecRequest>())
+                    await executor.InternalExecuteAsync<TExecResult, TFinallyExecRequest>(onFinallyRequest, cancellationToken);
                 else
                     executor.InternalExecute<TExecResult, TFinallyExecRequest>(onFinallyRequest);
 

@@ -1,29 +1,9 @@
-﻿// ***********************************************************************
-//  Assembly         : RzR.Shared.Extensions.TryExecuteTests
-//  Author           : RzR
-//  Created On       : 2025-01-15 16:42
-// 
-//  Last Modified By : RzR
-//  Last Modified On : 2025-01-20 19:34
-// ***********************************************************************
-//  <copyright file="TestTryExecuteAbstrBase.cs" company="RzR SOFT & TECH">
-//   Copyright © RzR. All rights reserved.
-//  </copyright>
-// 
-//  <summary>
-//  </summary>
-// ***********************************************************************
-
 #region U S A G E S
 
 using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using TryToExecute.CodeExec;
-// ReSharper disable RedundantLambdaParameterType
-// ReSharper disable UnusedParameter.Local
-// ReSharper disable NotAccessedField.Local
-// ReSharper disable RedundantArgumentDefaultValue
 #pragma warning disable CS0162
 
 #endregion

@@ -1,4 +1,4 @@
-﻿#region U S A G E S
+#region U S A G E S
 
 using AggregatedGenericResultMessage;
 using AggregatedGenericResultMessage.Abstractions;
@@ -9,8 +9,6 @@ using System;
 using System.Threading.Tasks;
 using TryToExecute.CodeExec;
 
-// ReSharper disable RedundantLambdaParameterType
-// ReSharper disable UnusedParameter.Local
 #pragma warning disable CS0162
 
 #endregion
@@ -271,7 +269,7 @@ public class TryCatchExecuteAsyncTests : TryCatchExecuteStaticBase
                 changedExceptionValue++;
                 return Result.Failure("ResultFailure").AddMessage("FailureMessage", MessageType.Error);
             },
-            finallyExecFunc: () => 
+            finallyExecFunc: () =>
             {
                 changedFinallyValue++;
 
@@ -307,7 +305,7 @@ public class TryCatchExecuteAsyncTests : TryCatchExecuteStaticBase
                 changedExceptionValue++;
                 return Result.Failure("ResultFailure").AddMessage("FailureMessage", MessageType.Error);
             },
-            finallyExecFunc: () => 
+            finallyExecFunc: () =>
             {
                 changedFinallyValue++;
 
@@ -344,7 +342,7 @@ public class TryCatchExecuteAsyncTests : TryCatchExecuteStaticBase
                 changedExceptionValue++;
                 return Result.Failure("ResultFailure").AddMessage("FailureMessage", MessageType.Error);
             },
-            finallyExecFunc: () => 
+            finallyExecFunc: () =>
             {
                 changedFinallyValue++;
 
@@ -380,7 +378,7 @@ public class TryCatchExecuteAsyncTests : TryCatchExecuteStaticBase
                 changedExceptionValue++;
                 return Result.Failure("ResultFailure").AddMessage("FailureMessage", MessageType.Error);
             },
-            finallyExecFunc: () => 
+            finallyExecFunc: () =>
             {
                 changedFinallyValue++;
 
@@ -396,7 +394,7 @@ public class TryCatchExecuteAsyncTests : TryCatchExecuteStaticBase
         Assert.AreEqual(11, changedFinallyValue);
         Assert.AreEqual(100, changedExceptionValue);
     }
-   
+
     [TestMethod]
     public async Task TryToExecFuncAsync_ExecFuncTaskTResult_FailureFuncTResult_ILogger_ShouldFailWithMessage_Test()
     {
@@ -448,7 +446,7 @@ public class TryCatchExecuteAsyncTests : TryCatchExecuteStaticBase
             {
                 changedExceptionValue++;
                 return Result.Failure("ResultFailure").AddMessage("FailureMessage", MessageType.Error);
-            }, 
+            },
             exceptionLogger: _logger,
             forceCallGarbageCollector: false
         );
@@ -461,7 +459,7 @@ public class TryCatchExecuteAsyncTests : TryCatchExecuteStaticBase
         Assert.AreEqual(10, changedFinallyValue);
         Assert.AreEqual(100, changedExceptionValue);
     }
-  
+
     [TestMethod]
     public async Task TryToExecFuncAsync_ExecFuncTaskTResult_FailureFuncTResultException_ILogger_ShouldFailWithMessage_Test()
     {
@@ -513,7 +511,7 @@ public class TryCatchExecuteAsyncTests : TryCatchExecuteStaticBase
             {
                 changedExceptionValue++;
                 return Result.Failure("ResultFailure").AddMessage("FailureMessage", MessageType.Error);
-            }, 
+            },
             exceptionLogger: _logger,
             forceCallGarbageCollector: false
         );
@@ -526,7 +524,7 @@ public class TryCatchExecuteAsyncTests : TryCatchExecuteStaticBase
         Assert.AreEqual(10, changedFinallyValue);
         Assert.AreEqual(100, changedExceptionValue);
     }
-   
+
     [TestMethod]
     public async Task TryToExecFuncAsync_ExecFuncTaskTResult_FailureFuncTResult_ILogger_FinallyFuncTResult_ShouldFailWithMessage_Test()
     {
@@ -584,7 +582,7 @@ public class TryCatchExecuteAsyncTests : TryCatchExecuteStaticBase
             {
                 changedExceptionValue++;
                 return Result.Failure("ResultFailure").AddMessage("FailureMessage", MessageType.Error);
-            }, 
+            },
             exceptionLogger: _logger,
             finallyExecFunc: () =>
             {
@@ -661,7 +659,7 @@ public class TryCatchExecuteAsyncTests : TryCatchExecuteStaticBase
             {
                 changedExceptionValue++;
                 return Result.Failure("ResultFailure").AddMessage("FailureMessage", MessageType.Error);
-            }, 
+            },
             exceptionLogger: _logger,
             finallyExecFunc: () =>
             {
@@ -680,7 +678,7 @@ public class TryCatchExecuteAsyncTests : TryCatchExecuteStaticBase
         Assert.AreEqual(11, changedFinallyValue);
         Assert.AreEqual(100, changedExceptionValue);
     }
-   
+
     [TestMethod]
     public async Task TryToExecFuncAsync_ExecFuncTaskTResult_FailureFuncTaskTResultException_ShouldFailWithMessage_Test()
     {
@@ -744,7 +742,7 @@ public class TryCatchExecuteAsyncTests : TryCatchExecuteStaticBase
         Assert.AreEqual(1, changedValue);
         Assert.AreEqual(10, changedFinallyValue);
         Assert.AreEqual(100, changedExceptionValue);
-    } 
+    }
 
     [TestMethod]
     public async Task TryToExecFuncAsync_ExecFuncTaskTResult_FailureFuncTaskTResult_FinallyFuncTResult_ShouldFailWithMessage_Test()
@@ -822,7 +820,7 @@ public class TryCatchExecuteAsyncTests : TryCatchExecuteStaticBase
         Assert.AreEqual(11, changedFinallyValue);
         Assert.AreEqual(100, changedExceptionValue);
     }
- 
+
     [TestMethod]
     public async Task TryToExecFuncAsync_ExecFuncTaskTResult_FailureFuncTaskTResultException_FinallyFuncTResult_ShouldFailWithMessage_Test()
     {
@@ -898,7 +896,7 @@ public class TryCatchExecuteAsyncTests : TryCatchExecuteStaticBase
         Assert.AreEqual(1, changedValue);
         Assert.AreEqual(11, changedFinallyValue);
         Assert.AreEqual(100, changedExceptionValue);
-    } 
+    }
 
     [TestMethod]
     public async Task TryToExecFuncAsync_ExecFuncTaskTResult_FailureFuncTaskTResult_ILogger_ShouldFailWithMessage_Test()

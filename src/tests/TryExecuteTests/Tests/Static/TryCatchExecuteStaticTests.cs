@@ -1,12 +1,9 @@
-﻿#region U S A G E S
+#region U S A G E S
 
 using Microsoft.Extensions.Logging;
 using System;
 using TryToExecute.CodeExec;
 
-// ReSharper disable RedundantArgumentDefaultValue
-// ReSharper disable RedundantLambdaParameterType
-// ReSharper disable NotAccessedField.Local
 #pragma warning disable CS8618
 #pragma warning disable CS0162
 

@@ -16,7 +16,7 @@ using System.Resources;
 
 [assembly: AssemblyCompany("RzR SOFT & TECH ®")]
 [assembly: AssemblyProduct("TryToExecute")]
-[assembly: AssemblyCopyright("Copyright © 2022-2025 RzR All rights reserved.")]
+[assembly: AssemblyCopyright("Copyright © 2022-2026 RzR All rights reserved.")]
 [assembly: AssemblyTrademark("RzR SOFT Solution™")]
 [assembly: AssemblyDescription("The 'TryToExecute' represents an implementation of the try/catch/finally block. It can execute code without worrying about exceptions; it only specifies what to do in this case and delegate it.")]
 
@@ -27,6 +27,6 @@ using System.Resources;
 #if NETSTANDARD2_0_OR_GREATER
 [assembly: NeutralResourcesLanguage("en-US", UltimateResourceFallbackLocation.MainAssembly)]
 #endif
-[assembly: AssemblyVersion("2.1.0.7515")]
-[assembly: AssemblyFileVersion("2.1.0.7515")]
-[assembly: AssemblyInformationalVersion("2.1.0.7515")]
+[assembly: AssemblyVersion("3.0.0.34")]
+[assembly: AssemblyFileVersion("3.0.0.34")]
+[assembly: AssemblyInformationalVersion("3.0.0.34")]

@@ -1,4 +1,4 @@
-﻿#region U S A G E S
+#region U S A G E S
 
 using AggregatedGenericResultMessage;
 using AggregatedGenericResultMessage.Abstractions;
@@ -6,10 +6,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 using TryToExecute.CodeExec;
-// ReSharper disable RedundantLambdaParameterType
-// ReSharper disable UnusedParameter.Local
-// ReSharper disable NotAccessedField.Local
-// ReSharper disable RedundantArgumentDefaultValue
 #pragma warning disable CS0162
 
 #endregion
