@@ -111,6 +111,25 @@ namespace TryToExecute.Models
         /// </returns>
         /// =================================================================================================
         public T Execute<T>(Func<T> func)
+            => Execute(func, CancellationToken.None);
+
+        /// -------------------------------------------------------------------------------------------------
+        /// <summary>
+        ///     Executes the given func/operation, cancellable through the given
+        ///     <paramref name="cancellationToken"/>.
+        /// </summary>
+        /// <exception cref="Exception">Thrown when an exception error condition occurs.</exception>
+        /// <exception cref="OperationCanceledException">
+        ///     Thrown when cancellation is requested through <paramref name="cancellationToken"/>.
+        /// </exception>
+        /// <typeparam name="T">Generic type parameter.</typeparam>
+        /// <param name="func">The function/action that must be executed.</param>
+        /// <param name="cancellationToken">A token that allows processing to be cancelled.</param>
+        /// <returns>
+        ///     A T.
+        /// </returns>
+        /// =================================================================================================
+        public T Execute<T>(Func<T> func, CancellationToken cancellationToken)
         {
             func.ThrowIfArgNull(nameof(func));
 
@@ -119,6 +138,7 @@ namespace TryToExecute.Models
 
             for (var attempt = 1; attempt <= attempts; attempt++)
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 try
                 {
                     return func();
@@ -132,7 +152,7 @@ namespace TryToExecute.Models
                         throw;
 
                     var delay = ComputeRetryDelay(attempt);
-                    ThreadSleep(delay);
+                    ThreadSleep(delay, cancellationToken);
                 }
             }
 
@@ -246,20 +266,31 @@ namespace TryToExecute.Models
 
         /// -------------------------------------------------------------------------------------------------
         /// <summary>
-        ///     Thread sleep. Local thread delay.
+        ///     Thread sleep. Local thread delay, cancellable through the given <paramref name="cancellationToken"/>.
         /// </summary>
+        /// <exception cref="OperationCanceledException">
+        ///     Thrown when cancellation is requested through <paramref name="cancellationToken"/>.
+        /// </exception>
         /// <param name="timeSpan">The time span.</param>
+        /// <param name="cancellationToken">A token that allows processing to be cancelled.</param>
         /// =================================================================================================
-        private static void ThreadSleep(TimeSpan timeSpan)
+        private static void ThreadSleep(TimeSpan timeSpan, CancellationToken cancellationToken)
         {
-            // Using Thread.Sleep for sync delay; not cancellable.
             if (timeSpan.IsLessOrZero().IsTrue())
                 return;
 
 #if NETSTANDARD1_0
-            timeSpan.InternalSleep();
+            timeSpan.InternalSleep(cancellationToken);
 #else
-            Thread.Sleep(timeSpan);
+            if (cancellationToken.CanBeCanceled)
+            {
+                if (cancellationToken.WaitHandle.WaitOne(timeSpan))
+                    cancellationToken.ThrowIfCancellationRequested();
+            }
+            else
+            {
+                Thread.Sleep(timeSpan);
+            }
 #endif
         }
     }

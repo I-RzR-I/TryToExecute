@@ -195,12 +195,12 @@ namespace TryToExecute.Builder
         /// <param name="cancellationToken">A token that allows processing to be cancelled.</param>
         /// =================================================================================================
         public TryBuilderSync(Action action, CancellationToken cancellationToken)
-            : base(() =>
+            : base(_ =>
             {
                 action();
 
                 return null;
-            })
+            }, cancellationToken)
         {
         }
     }

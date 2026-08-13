@@ -1,19 +1,3 @@
-﻿// ***********************************************************************
-//  Assembly         : RzR.Shared.Extensions.TryExecuteTests
-//  Author           : RzR
-//  Created On       : 2025-01-16 01:12
-// 
-//  Last Modified By : RzR
-//  Last Modified On : 2025-01-16 01:12
-// ***********************************************************************
-//  <copyright file="TryToExecuteFuncFinallyAsyncTests.cs" company="RzR SOFT & TECH">
-//   Copyright © RzR. All rights reserved.
-//  </copyright>
-// 
-//  <summary>
-//  </summary>
-// ***********************************************************************
-
 using AggregatedGenericResultMessage.Abstractions;
 using AggregatedGenericResultMessage;
 using AggregatedGenericResultMessage.Enums;
@@ -25,8 +9,6 @@ using System;
 using System.Linq;
 using TryToExecute.CodeExec;
 
-// ReSharper disable RedundantLambdaParameterType
-// ReSharper disable UnusedParameter.Local
 #pragma warning disable CS0162
 
 namespace TryExecuteTests.Tests.Abstract;

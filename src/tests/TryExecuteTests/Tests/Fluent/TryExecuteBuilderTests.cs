@@ -1,19 +1,3 @@
-﻿// ***********************************************************************
-//  Assembly         : RzR.Shared.Extensions.TryExecuteTests
-//  Author           : RzR
-//  Created On       : 2025-11-24 21:11
-// 
-//  Last Modified By : RzR
-//  Last Modified On : 2025-11-24 21:47
-// ***********************************************************************
-//  <copyright file="TryExecuteBuilderTests.cs" company="RzR SOFT & TECH">
-//   Copyright © RzR. All rights reserved.
-//  </copyright>
-// 
-//  <summary>
-//  </summary>
-// ***********************************************************************
-
 using System;
 using TryToExecute.Builder;
 using TryToExecute.Enums;
@@ -91,16 +75,16 @@ namespace TryExecuteTests.Tests.Fluent
 
                     return 10;
                 })
-                .Catch<ArgumentException>(exception =>
-                {
-                    Console.Write(exception.ToString());
-                    exceptionResult = 1;
-                })
                 .Catch<ArgumentNullException>((exception, token) =>
                 {
 
                     Console.Write(exception.ToString());
                     exceptionResult = 2;
+                })
+                .Catch<ArgumentException>(exception =>
+                {
+                    Console.Write(exception.ToString());
+                    exceptionResult = 1;
                 })
                 .Finally(() => finallyResult = 1)
                 .Finally(() => finallyResult = -1)
@@ -130,16 +114,16 @@ namespace TryExecuteTests.Tests.Fluent
 
                     return 10;
                 })
-                .Catch<ArgumentException>(exception =>
-                {
-                    Console.Write(exception.ToString());
-                    exceptionResult = 1;
-                })
                 .Catch<ArgumentNullException>((exception, token) =>
                 {
 
                     Console.Write(exception.ToString());
                     exceptionResult = 2;
+                })
+                .Catch<ArgumentException>(exception =>
+                {
+                    Console.Write(exception.ToString());
+                    exceptionResult = 1;
                 })
                 .Finally(() => finallyResult = 1)
                 .Finally(() => finallyResult = -1)
@@ -175,16 +159,16 @@ namespace TryExecuteTests.Tests.Fluent
 
                     return 10;
                 })
-                .Catch<ArgumentException>(exception =>
-                {
-                    Console.Write(exception.ToString());
-                    exceptionResult = 1;
-                })
                 .Catch<ArgumentNullException>((exception, token) =>
                 {
 
                     Console.Write(exception.ToString());
                     exceptionResult = 2;
+                })
+                .Catch<ArgumentException>(exception =>
+                {
+                    Console.Write(exception.ToString());
+                    exceptionResult = 1;
                 })
                 .Fallback(() => fallBack = 5)
                 .Finally(() => finallyResult = 1)
@@ -241,4 +225,3 @@ namespace TryExecuteTests.Tests.Fluent
         }
     }
 }
-

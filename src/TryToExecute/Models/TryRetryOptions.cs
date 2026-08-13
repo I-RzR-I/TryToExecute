@@ -119,13 +119,43 @@ namespace TryToExecute.Models
 
         /// -------------------------------------------------------------------------------------------------
         /// <summary>
+        ///     (Immutable) shared random instance used by the default <see cref="RandomProvider"/>.
+        /// </summary>
+        /// =================================================================================================
+        private static readonly Random _sharedRandom = new Random();
+
+        /// -------------------------------------------------------------------------------------------------
+        /// <summary>
+        ///     (Immutable) synchronization object guarding access to <see cref="_sharedRandom"/>, since
+        ///     <see cref="Random"/> is not thread-safe.
+        /// </summary>
+        /// =================================================================================================
+        private static readonly object _randomLock = new object();
+
+        /// -------------------------------------------------------------------------------------------------
+        /// <summary>
         ///     Initializes a new instance of the <see cref="TryRetryOptions"/> class.
         /// </summary>
         /// =================================================================================================
         public TryRetryOptions()
         {
             ShouldRetryOn = ex => ex.IsTypeOfOperationCancel().IsFalse();
-            RandomProvider = () => new Random().NextDouble();
+            RandomProvider = NextRandom;
+        }
+
+        /// -------------------------------------------------------------------------------------------------
+        /// <summary>
+        ///     Returns the next random double in [0,1) using the shared <see cref="Random"/> instance,
+        ///     guarded by a lock since <see cref="Random"/> is not thread-safe.
+        /// </summary>
+        /// <returns>
+        ///     A random double in [0,1).
+        /// </returns>
+        /// =================================================================================================
+        private static double NextRandom()
+        {
+            lock (_randomLock)
+                return _sharedRandom.NextDouble();
         }
     }
 }

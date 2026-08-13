@@ -19,6 +19,8 @@
 using System;
 using System.Threading.Tasks;
 
+using TryToExecute.Extensions;
+
 #endregion
 
 namespace TryToExecute.Models.Internal
@@ -73,6 +75,6 @@ namespace TryToExecute.Models.Internal
         /// </returns>
         /// =================================================================================================
         public bool Matches(Exception ex)
-            => ExceptionType == ex.GetType();
+            => ExceptionType.IsAssignableFromPortable(ex.GetType());
     }
 }

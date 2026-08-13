@@ -1,19 +1,3 @@
-﻿// ***********************************************************************
-//  Assembly         : RzR.Shared.Extensions.TryExecuteTests
-//  Author           : RzR
-//  Created On       : 2025-01-16 10:29
-// 
-//  Last Modified By : RzR
-//  Last Modified On : 2025-01-16 10:29
-// ***********************************************************************
-//  <copyright file="TryToExecuteFuncTaskFinallyAsyncTests.cs" company="RzR SOFT & TECH">
-//   Copyright © RzR. All rights reserved.
-//  </copyright>
-// 
-//  <summary>
-//  </summary>
-// ***********************************************************************
-
 using AggregatedGenericResultMessage.Abstractions;
 using AggregatedGenericResultMessage;
 using AggregatedGenericResultMessage.Enums;
@@ -23,8 +7,6 @@ using System.Threading.Tasks;
 using System;
 using TryToExecute.CodeExec;
 
-// ReSharper disable RedundantLambdaParameterType
-// ReSharper disable UnusedParameter.Local
 #pragma warning disable CS0162
 
 namespace TryExecuteTests.Tests.Abstract;
@@ -726,7 +708,7 @@ public class TryToExecuteFuncTaskFinallyAsyncTests : TryCatchExecuteBase
         Assert.AreEqual(11, changedFinallyValue);
         Assert.AreEqual(100, changedExceptionValue);
     }
- 
+
     [TestMethod]
     public async Task TryToExecFuncAsync_ExecFuncTaskTResult_FailureFuncTaskTResultException_ILogger_FinallyFuncTask_ShouldFailWithMessage_Test()
     {

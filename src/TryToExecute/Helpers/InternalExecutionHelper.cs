@@ -17,6 +17,7 @@
 #region U S A G E S
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using TryToExecute.Extensions;
 
@@ -64,11 +65,11 @@ namespace TryToExecute.Helpers
 
                     return defaultTResult;
                 }
-                else if (typeof(TExecute) == typeof(Func<>) || typeof(TExecute) == typeof(Func<TExecute>))
+                else if (typeof(TExecute) == typeof(Func<TExecute>))
                 {
                     (execRequest as Func<TExecute>)!.Invoke();
                 }
-                else if (typeof(TExecute) == typeof(Func<>) || typeof(TExecute) == typeof(Func<TExecuteResult>))
+                else if (typeof(TExecute) == typeof(Func<TExecuteResult>))
                 {
                     return (execRequest as Func<TExecuteResult>)!.Invoke();
                 }
@@ -107,11 +108,11 @@ namespace TryToExecute.Helpers
 
                     return defaultTResult;
                 }
-                else if (typeof(TExecute) == typeof(Func<>) || typeof(TExecute) == typeof(Func<TExecute>))
+                else if (typeof(TExecute) == typeof(Func<TExecute>))
                 {
                     (execRequest as Func<TExecute>)?.Invoke();
                 }
-                else if (typeof(TExecute) == typeof(Func<>) || typeof(TExecute) == typeof(Func<TExecuteResult>))
+                else if (typeof(TExecute) == typeof(Func<TExecuteResult>))
                 {
                     return (execRequest as Func<TExecuteResult>)!.Invoke();
                 }
@@ -155,7 +156,7 @@ namespace TryToExecute.Helpers
                 {
                     await (execRequest as Func<Task>)!.Invoke();
 
-                    return await Task<TExecuteResult>.Factory.StartNew(() => defaultTResult);
+                    return defaultTResult;
                 }
                 else if (typeof(TExecute) == typeof(Func<Task<TExecute>>))
                 {
@@ -174,6 +175,33 @@ namespace TryToExecute.Helpers
             }
 
             return defaultTResult;
+        }
+
+        /// -------------------------------------------------------------------------------------------------
+        /// <summary>
+        ///     Internal execute asynchronous, with cancellation support.
+        /// </summary>
+        /// <typeparam name="TExecuteResult">Type of the execute result.</typeparam>
+        /// <typeparam name="TExecute">Type of the execution.</typeparam>
+        /// <param name="execRequest">The execute request.</param>
+        /// <param name="cancellationToken">The cancellation token.</param>
+        /// <param name="exception">(Optional) The exception.</param>
+        /// <returns>
+        ///     A TExecuteResult.
+        /// </returns>
+        /// =================================================================================================
+        internal async Task<TExecuteResult> InternalExecuteAsync<TExecuteResult, TExecute>(
+            TExecute execRequest, CancellationToken cancellationToken, Exception exception = null)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            if (execRequest.IsNotNull()
+                && typeof(TExecute) == typeof(Func<CancellationToken, Task<TExecuteResult>>))
+            {
+                return await (execRequest as Func<CancellationToken, Task<TExecuteResult>>)!.Invoke(cancellationToken);
+            }
+
+            return await InternalExecuteAsync<TExecuteResult, TExecute>(execRequest, exception);
         }
 
         /// -------------------------------------------------------------------------------------------------
@@ -206,13 +234,13 @@ namespace TryToExecute.Helpers
                 {
                     await (execRequest as Func<Task>)!.Invoke();
 
-                    return await Task<TExecuteResult>.Factory.StartNew(() => defaultTResult);
+                    return defaultTResult;
                 }
-                else if (typeof(TExecute) == typeof(Func<>) || typeof(TExecute) == typeof(Func<Task<TExecute>>))
+                else if (typeof(TExecute) == typeof(Func<Task<TExecute>>))
                 {
                     await (execRequest as Func<Task<TExecute>>)!.Invoke();
                 }
-                else if (typeof(TExecute) == typeof(Func<>) || typeof(TExecute) == typeof(Func<Task<TExecuteResult>>))
+                else if (typeof(TExecute) == typeof(Func<Task<TExecuteResult>>))
                 {
                     return await (execRequest as Func<Task<TExecuteResult>>)!.Invoke();
                 }

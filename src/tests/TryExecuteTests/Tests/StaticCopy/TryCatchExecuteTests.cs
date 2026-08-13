@@ -1,13 +1,9 @@
-﻿#region U S A G E S
+#region U S A G E S
 
 using Microsoft.Extensions.Logging;
 using System;
 using TryToExecute.CodeExec;
-// ReSharper disable UnusedParameter.Local
 
-// ReSharper disable RedundantArgumentDefaultValue
-// ReSharper disable RedundantLambdaParameterType
-// ReSharper disable NotAccessedField.Local
 #pragma warning disable CS8618
 #pragma warning disable CS0162
 #pragma warning disable IDE0039
@@ -115,8 +111,8 @@ public class TryCatchExecuteTests : TryCatchExecuteStaticBase
         var changedFinallyValue = 10;
         var exec = TryToExecute(
             () => { throw new Exception(""); changedValue++; return 0; },
-            -1, 
-            () => { changedFinallyValue++; return 999; }, 
+            -1,
+            () => { changedFinallyValue++; return 999; },
             false);
 
         Assert.IsNotNull(exec);

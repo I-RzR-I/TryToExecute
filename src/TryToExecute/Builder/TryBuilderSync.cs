@@ -103,7 +103,7 @@ namespace TryToExecute.Builder
             {
                 handler((TException)ex);
 
-                return new Task(() => { });
+                return Task.FromResult<object>(null);
             }));
 
             return this;
@@ -129,7 +129,7 @@ namespace TryToExecute.Builder
             {
                 handler((TException)ex, BaseCancellationToken);
 
-                return new Task(() => { });
+                return Task.FromResult<object>(null);
             }));
 
             return this;
@@ -261,18 +261,18 @@ namespace TryToExecute.Builder
             try
             {
                 var resultValue = BaseRetryPolicy.IsNotNull()
-                    ? BaseRetryPolicy.Execute(() => _tryBlockWithToken(BaseCancellationToken))
+                    ? BaseRetryPolicy.Execute(() => _tryBlockWithToken(BaseCancellationToken), BaseCancellationToken)
                     : _tryBlockWithToken(BaseCancellationToken);
 
                 return TryResult<T>.FromValue(resultValue);
             }
-            catch (Exception ex)
+            catch (Exception ex) when (ex.IsTypeOfOperationCancel().IsFalse())
             {
                 foreach (var handler in BaseCatchHandlers)
                 {
                     if (handler.Matches(ex).IsTrue())
                     {
-                        handler.Handler(ex).RunSynchronously();
+                        handler.Handler(ex);
                         break;
                     }
                 }
@@ -293,7 +293,7 @@ namespace TryToExecute.Builder
                         return TryResult<T>.FromValue(fallback);
                     }
                 }
-                catch (Exception fallbackException)
+                catch (Exception fallbackException) when (fallbackException.IsTypeOfOperationCancel().IsFalse())
                 {
                     /*
                      *  If fallback throws,

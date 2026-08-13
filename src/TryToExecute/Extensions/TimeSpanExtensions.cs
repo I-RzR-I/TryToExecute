@@ -18,6 +18,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Threading;
 
 #endregion
 
@@ -47,6 +48,34 @@ namespace TryToExecute.Extensions
                 // Busy-wait
             }
         }
+
+#if NETSTANDARD1_0
+        /// -------------------------------------------------------------------------------------------------
+        /// <summary>
+        ///     A TimeSpan extension method that internal sleep, cancellable through the given
+        ///     <paramref name="cancellationToken"/>.
+        /// </summary>
+        /// <exception cref="OperationCanceledException">
+        ///     Thrown when cancellation is requested through <paramref name="cancellationToken"/>.
+        /// </exception>
+        /// <param name="timeSpan">The timeSpan to act on.</param>
+        /// <param name="cancellationToken">A token that allows processing to be cancelled.</param>
+        /// =================================================================================================
+        internal static void InternalSleep(this TimeSpan timeSpan, CancellationToken cancellationToken)
+        {
+            if (timeSpan.TotalMilliseconds <= 0)
+                return;
+
+            var sw = Stopwatch.StartNew();
+            while (sw.ElapsedMilliseconds < timeSpan.TotalMilliseconds)
+            {
+                if (cancellationToken.IsCancellationRequested)
+                    break;
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+        }
+#endif
 
         /// -------------------------------------------------------------------------------------------------
         /// <summary>

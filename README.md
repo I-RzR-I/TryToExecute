@@ -13,11 +13,13 @@ In the following flow on trying to implement try execution (`TryToExecute`, `Try
 
 Or can be used `TryBuilder` for fluent invoke.
 ```csharp
-TryBuilder.Do(async () => await FooAsync())
+TryBuilder.Do(async ct => await FooAsync(ct), cancellationToken)
           .Catch<IOException>(ex => ...)
           .Finally(() => ...)
           .ExecuteAsync();
 ```
+
+Async flows accept an optional `CancellationToken`: every `async` method and the fluent builder have token-aware overloads that pass the token **into** your delegate. A canceled operation throws `OperationCanceledException` — it is never converted into a fallback/failure result — while `finally` blocks still run.
 
 
 To understand more efficiently how you can use available functionalities please consult the [using documentation/file](docs/usage.md).

@@ -1,19 +1,3 @@
-﻿// ***********************************************************************
-//  Assembly         : RzR.Shared.Extensions.TryExecuteTests
-//  Author           : RzR
-//  Created On       : 2025-01-15 20:14
-// 
-//  Last Modified By : RzR
-//  Last Modified On : 2025-01-15 20:14
-// ***********************************************************************
-//  <copyright file="TryToExecuteActionFinallyTests.cs" company="RzR SOFT & TECH">
-//   Copyright © RzR. All rights reserved.
-//  </copyright>
-// 
-//  <summary>
-//  </summary>
-// ***********************************************************************
-
 using AggregatedGenericResultMessage.Abstractions;
 using AggregatedGenericResultMessage;
 using AggregatedGenericResultMessage.Enums;
@@ -22,8 +6,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using TryToExecute.CodeExec;
 
-// ReSharper disable RedundantLambdaParameterType
-// ReSharper disable UnusedParameter.Local
 #pragma warning disable CS0162
 
 namespace TryExecuteTests.Tests.Abstract;
@@ -44,7 +26,7 @@ public class TryToExecuteActionFinallyTests : TryCatchExecuteBase
 
         _logger = loggerFactory.CreateLogger<TryToExecuteActionFinallyTests>();
     }
-    
+
     [TestMethod]
     public void TryToExecAction_ActionFinally_ShouldPass_Test()
     {
@@ -183,7 +165,7 @@ public class TryToExecuteActionFinallyTests : TryCatchExecuteBase
         Assert.AreEqual(11, changedFinallyValue);
         Assert.AreEqual(100, changedExceptionValue);
     }
- 
+
     [TestMethod]
     public void TryToExec_ExecFuncTResult_FailureFuncTResult_FinallyAction_ShouldFailWithMessage_Test()
     {
@@ -245,8 +227,8 @@ public class TryToExecuteActionFinallyTests : TryCatchExecuteBase
         Assert.AreEqual(1, changedValue);
         Assert.AreEqual(11, changedFinallyValue);
         Assert.AreEqual(100, changedExceptionValue);
-    } 
- 
+    }
+
     [TestMethod]
     public void TryToExec_ExecFuncTResult_FailureFuncTResultException_FinallyAction_ShouldFailWithMessage_Test()
     {
@@ -318,8 +300,8 @@ public class TryToExecuteActionFinallyTests : TryCatchExecuteBase
         Assert.AreEqual(1, changedValue);
         Assert.AreEqual(11, changedFinallyValue);
         Assert.AreEqual(100, changedExceptionValue);
-    } 
-  
+    }
+
     [TestMethod]
     public void TryToExec_ExecFuncTResult_FailureFuncTResult_ILogger_FinallyAction_ShouldFailWithMessage_Test()
     {
@@ -393,8 +375,8 @@ public class TryToExecuteActionFinallyTests : TryCatchExecuteBase
         Assert.AreEqual(1, changedValue);
         Assert.AreEqual(11, changedFinallyValue);
         Assert.AreEqual(100, changedExceptionValue);
-    }  
- 
+    }
+
     [TestMethod]
     public void TryToExec_ExecFuncTResult_FailureFuncTResultException_ILogger_FinallyAction_ShouldFailWithMessage_Test()
     {
